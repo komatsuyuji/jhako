@@ -1,0 +1,185 @@
+AWSのjHakoインストールガイド
+
+1. 必要ファイルの入手
+jHakoソース本体、以後記述でjobbx-X.X.Xを表記します
+http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip
+http://www.famfamfam.com/lab/icons/silk/famfamfam_silk_icons_v013.zip
+http://ftp.riken.jp/Linux/centos/7/os/x86_64/Packages/sblim-sfcc-2.2.5-6.el7.x86_64.rpm
+http://ftp.riken.jp/Linux/centos/7/os/x86_64/Packages/sblim-sfcc-devel-2.2.5-6.el7.x86_64.rpm
+http://ftp.riken.jp/Linux/centos/7/os/x86_64/Packages/libwsman1-2.3.6-13.el7.x86_64.rpm
+http://ftp.riken.jp/Linux/centos/7/os/x86_64/Packages/wsmancli-2.3.0-4.el7.x86_64.rpm
+http://ftp.riken.jp/Linux/centos/7/os/x86_64/Packages/openwsman-client-2.3.6-13.el7.x86_64.rpm
+http://ftp.riken.jp/Linux/centos/7/os/x86_64/Packages/openwsman-server-2.3.6-13.el7.x86_64.rpm
+http://ftp.riken.jp/Linux/centos/7/os/x86_64/Packages/libwsman-devel-2.3.6-13.el7.x86_64.rpm
+http://epel.mirror.srv.co.ge/7/x86_64/l/libcsv-3.0.3-2.el7.x86_64.rpm
+http://epel.mirror.srv.co.ge/7/x86_64/l/libcsv-devel-3.0.3-2.el7.x86_64.rpm
+
+2. 配置(rootユーザ実行)
+2.1 インストール先の作成
+# mkdir /opt/tools
+# cd /opt/tools
+
+2.2 ファイル配置
+/opt/toolsに
+  jobbx-X.X.X
+  ext-4.2.1-gpl.zip 
+  famfamfam_silk_icons_v013.zip
+  sblim-sfcc-2.2.5-6.el7.x86_64.rpm
+  sblim-sfcc-devel-2.2.5-6.el7.x86_64.rpm
+  libwsman1-2.3.6-13.el7.x86_64.rpm
+  wsmancli-2.3.0-4.el7.x86_64.rpm
+  openwsman-client-2.3.6-13.el7.x86_64.rpm
+  openwsman-server-2.3.6-13.el7.x86_64.rpm
+  libwsman-devel-2.3.6-13.el7.x86_64.rpm
+  libcsv-3.0.3-2.el7.x86_64.rpm
+  libcsv-devel-3.0.3-2.el7.x86_64.rpm
+を配置してください。
+
+3. 必要なものインストール
+3.1 パッケージインストール
+# yum -y install libconfuse libconfuse-devel ruby ruby-devel ruby20 rubygems20
+# yum -y install pam-devel
+# yum -y install unzip gcc gcc-c++ automake make autoconf
+# yum -y install zlib zlib-devel openssl openssl-devel libssh2 libssh2-devel readline readline-devel curl libcurl libcurl-devel
+# yum -y install libxml2 libxml2-devel mysql mysql-server mysql-devel libdbi libdbi-dbd-mysql libdbi-devel libdbi-drivers
+# yum -y install libyaml libyaml-devel sqlite sqlite-devel httpd httpd-devel
+# yum -y install apr apr-devel apr-util apr-util-devel libxslt-devel
+
+# cd /opt/tools
+# rpm -ivh sblim-sfcc-2.2.5-6.el7.x86_64.rpm sblim-sfcc-devel-2.2.5-6.el7.x86_64.rpm
+# rpm -ivh libwsman1-2.3.6-13.el7.x86_64.rpm wsmancli-2.3.0-4.el7.x86_64.rpm
+# rpm -ivh openwsman-client-2.3.6-13.el7.x86_64.rpm openwsman-server-2.3.6-13.el7.x86_64.rpm libwsman-devel-2.3.6-13.el7.x86_64.rpm 
+# rpm -ivh libcsv-3.0.3-2.el7.x86_64.rpm libcsv-devel-3.0.3-2.el7.x86_64.rpm
+
+3.2 bundlerインストール
+# gem install bundler
+
+3.3 passengerインストール
+# gem install passenger
+# passenger-install-apache2-module -a --languages ruby
+
+4. jHako用データベースとユーザ作成
+もしmysql管理者ユーザrootとパスワードが変更された場合、読み替えてください。
+# service mysqld start
+# mysql --user='root' --password=''
+
+4.1 データベース作成
+SQL> CREATE DATABASE jhako CHARACTER SET utf8
+
+4.2 ユーザ作成
+SQL> GRANT ALL ON jhako.* TO jhako@localhost
+SQL> FLUSH PRIVILEGES
+SQL> SET PASSWORD FOR jhako@localhost=password('jhako')
+
+5. jHakoインストール準備
+5.1 インストール先作成
+# mkdir /opt/jhako
+# cd /opt/jhako
+# mkdir bin sbin etc run logs lock tmp
+
+6 jHako Webインストール
+6.1 jHako Web本体インストール
+# cp -rp /opt/tools/jhako-X.X.X/frontends /opt/jhako/
+
+6.2 必要なgemインストール
+# cd /opt/jhako/frontends
+# gem install io-console
+# bundler install build.nokogiri --use-system-libraries
+# bundler install --path vendor/bundler
+
+6.3 jHakoテーブル作成と初期データ投入
+/opt/jhako/frontends/config/database.ymlのデータベース接続情報を編集してください。
+
+production:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: jhako
+  pool: 5
+  username: jhako
+  password: jhako
+  host: localhost
+  socket: /var/lib/mysql/mysql.sock
+
+# cd /opt/jhako/frontends
+# RAILS_ENV=production bundler exec rake db:migrate
+# RAILS_ENV=production bundler exec rake db:seed
+
+6.4 jsプリコンパイル
+# cd /opt/jhako/frontends
+# RAILS_ENV=production bundler exec rake assets:precompile
+
+6.5 extjsインストール
+# cd /opt/tools
+# unzip ext-4.2.1-gpl.zip
+# cp -rp ext-4.2.1.883/examples/ux ext-4.2.1.883/src/
+# mv ext-4.2.1.883 /opt/jhako/frontends/public/ext
+
+6.6 famfamfamインストール
+# cd /opt/tools
+# unzip -d famfamfam famfamfam_silk_icons_v013.zip
+# mv famfamfam/icons /opt/jhako/frontends/public/images/
+
+6.7 Apache設定
+# cp -p /opt/tools/jhako-X.X.X/conf/jhako_apache.conf /etc/httpd/conf.d/
+/etc/httpd/conf.d/jhako_apache.confのpassenger情報を適切なパスに編集してください
+
+LoadModule passenger_module /usr/local/share/ruby/gems/2.0/gems/passenger-4.0.53/buildout/apache2/mod_passenger.so
+<IfModule mod_passenger.c>
+  PassengerRoot /usr/local/share/ruby/gems/2.0/gems/passenger-4.0.53
+  PassengerDefaultRuby /usr/bin/ruby
+</IfModule>
+
+6.8 公開ページのリング作成
+# rm -f /var/www/html/jhako
+# ln -s /opt/jhako/frontends/public /var/www/html/jhako
+
+6.9 オーナー権変更
+# chown -R apache:apache /opt/jhako/frontends
+
+7. jHako Serverインストール
+7.1 ソースコンパイルとインストール
+# cd /opt/tools/jhako-X.X.X
+# ./configure --prefix=/opt/jhako
+# make
+# make install
+
+7.2 jhako_server.conf編集
+/opt/jhako/etc/jhako_server.confのデータベース接続情報を編集してください
+
+DBHost = localhost
+DBName = jhako
+DBUser = jhako
+DBPassword = jhako
+
+7.3 起動スクリプトのコピー
+# cp -p /opt/tools/jhako-X.X.X/misc/init.d/jhako-server /etc/init.d/
+# chmod +x /etc/init.d/jhako-server
+
+8. 起動とサービス登録
+8.1 サービス登録
+# chkconfig --add mysqld
+# chkconfig --add httpd
+# chkconfig --add jhako-server
+
+8.2 自動起動設定
+# chkconfig mysqld on
+# chkconfig httpd on
+# chkconfig jhako-server on
+
+8.3 再起動
+# service mysqld restart
+# service httpd restart
+# service jhako-server restart
+
+8.4 起動確認
+# service jhako-server status
+jhako_server (pid ...) を実行中...
+
+9. jHako動作確認
+対応ブラウザにて以下のURL(xxx.xxx.xxx.xxxはjhakoをインストールしたIPアドレスもしくはホスト名に変換）を実行してください
+http://xxx.xxx.xxx.xxx/jhako
+初期ユーザ名とパスワードは以下を使用してください
+
+Username: admin
+Password: jhako

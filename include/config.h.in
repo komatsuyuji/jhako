@@ -1,0 +1,62 @@
+/* include/config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Define to 1 if you have the `confuse' library (-lconfuse). */
+#undef HAVE_LIBCONFUSE
+
+/* Define to 1 if you have the `csv' library (-lcsv). */
+#undef HAVE_LIBCSV
+
+/* Define to 1 if you have the `curl' library (-lcurl). */
+#undef HAVE_LIBCURL
+
+/* Define to 1 if you have the `dbi' library (-ldbi). */
+#undef HAVE_LIBDBI
+
+/* Define to 1 if you have the `dl' library (-ldl). */
+#undef HAVE_LIBDL
+
+/* Define to 1 if you have the `m' library (-lm). */
+#undef HAVE_LIBM
+
+/* Define to 1 if you have the `ssh2' library (-lssh2). */
+#undef HAVE_LIBSSH2
+
+/* Define to 1 if you have the `wsman' library (-lwsman). */
+#undef HAVE_LIBWSMAN
+
+/* Define to 1 if you have the `wsman_client' library (-lwsman_client). */
+#undef HAVE_LIBWSMAN_CLIENT
+
+/* Define to 1 if you have the `wsman_curl_client_transport' library
+   (-lwsman_curl_client_transport). */
+#undef HAVE_LIBWSMAN_CURL_CLIENT_TRANSPORT
+
+/* Define to 1 if you have the `xml2' library (-lxml2). */
+#undef HAVE_LIBXML2
+
+/* Define to 1 if your C compiler doesn't accept -c and -o together. */
+#undef NO_MINUS_C_MINUS_O
+
+/* Name of package */
+#undef PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Version number of package */
+#undef VERSION

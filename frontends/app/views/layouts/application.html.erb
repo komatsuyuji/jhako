@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>jHako</title>
+  <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= csrf_meta_tags %>
+  <%= stylesheet_link_tag request.fullpath.split("?")[0] + "ext/resources/css/ext-all.css" %>
+  <%= javascript_include_tag request.fullpath.split("?")[0] + "ext/ext-all.js" %>
+</head>
+<body>
+  <script type="text/javascript">
+    I18n.defaultLocale = "<%= I18n.default_locale %>";
+    I18n.locale = "<%= I18n.locale %>";
+    //Ext.Ajax.extraParams = {authenticity_token: "<%= form_authenticity_token %>"};
+  </script>
+
+
+  <% if logged_in? %>
+    <script type="text/javascript">
+      I18n.locale = "<%= @current_user.language %>";
+    </script>
+    <%= javascript_include_tag request.fullpath.split("?")[0] + "ext/locale/ext-lang-" + @current_user.language + ".js" %>
+  <% end %>
+
+  <%= javascript_include_tag request.fullpath.split("?")[0] + "app/common.js" %>
+  <%= javascript_include_tag request.fullpath.split("?")[0] + "app/app.js" %>
+  <%= yield %>
+</body>
+</html>

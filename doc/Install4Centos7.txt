@@ -1,0 +1,165 @@
+Centos7のjHakoインストールガイド
+
+1. 事前準備
+1.1 SElinux無効
+エディタで /etc/sysconfig/selinux を開き、 SELINUX の値を disabled に編集してください。
+
+SELINUX=enforcing
+↓
+SELINUX=disabled
+
+編集後、CentOSを再起動して下さい。
+# shutdown -r now
+
+2. 必要ファイルの入手
+jHakoソース本体、以後記述でjobbx-X.X.Xを表記します
+http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip
+http://www.famfamfam.com/lab/icons/silk/famfamfam_silk_icons_v013.zip
+
+3. 配置(rootユーザ実行)
+3.1 インストール先の作成
+# mkdir /opt/tools
+# cd /opt/tools
+
+3.2 ファイル配置
+/opt/toolsに
+  jobbx-X.X.X
+  ext-4.2.1-gpl.zip 
+  famfamfam_silk_icons_v013.zip
+を配置してください。
+
+4. 必要なものインストール
+4.1 パッケージインストール
+# yum -y install libconfuse libconfuse-devel ruby ruby-devel ruby rubygems
+# yum -y install pam-devel
+# yum -y install unzip gcc gcc-c++ automake make autoconf
+# yum -y install zlib zlib-devel openssl openssl-devel libssh2 libssh2-devel readline readline-devel curl libcurl libcurl-devel
+# yum -y install libxml2 libxml2-devel mariadb mariadb-server mariadb-devel libdbi libdbi-dbd-mysql libdbi-devel libdbi-drivers
+# yum -y install libyaml libyaml-devel sqlite sqlite-devel httpd httpd-devel
+# yum -y install apr apr-devel apr-util apr-util-devel
+# yum -y install libcsv libcsv-devel
+# yum -y install sblim-sfcc sblim-sfcc-devel wsmancli openwsman-client openwsman-server libwsman-devel
+
+4.2 bundlerインストール
+# gem install bundler
+
+4.3 passengerインストール
+# gem install passenger
+# passenger-install-apache2-module -a --languages ruby
+
+5. jhako用データベースとユーザ作成
+もしmariadb管理者ユーザrootとパスワードが変更された場合、読み替えてください。
+# systemctl start mariadb
+# mysql --user='root' --password=''
+
+5.1 データベース作成
+SQL> CREATE DATABASE jhako CHARACTER SET utf8
+
+5.2 ユーザ作成
+SQL> GRANT ALL ON jhako.* TO jhako@localhost
+SQL> FLUSH PRIVILEGES
+SQL> SET PASSWORD FOR jhako@localhost=password('jhako')
+
+5. jHakoインストール準備
+5.1 インストール先作成
+# mkdir /opt/jhako
+# cd /opt/jhako
+# mkdir bin sbin etc run logs lock tmp
+
+7. jHako Webインストール
+7.1 jHako Web本体インストール
+# cp -rp /opt/tools/jhako-X.X.X/frontends /opt/jhako/
+
+7.2 必要なgemインストール
+# cd /opt/jhako/frontends
+# bundler install --path vendor/bundler
+
+7.3 jHakoテーブル作成と初期データ投入
+/opt/jhako/frontends/config/database.ymlのデータベース接続情報を編集してください。
+
+production:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: jhako
+  pool: 5
+  username: jhako
+  password: jhako
+  host: localhost
+  socket: /var/lib/mysql/mysql.sock
+
+# cd /opt/jhako/frontends
+# RAILS_ENV=production bundler exec rake db:migrate
+# RAILS_ENV=production bundler exec rake db:seed
+
+7.4 jsプリコンパイル
+# cd /opt/jhako/frontends
+# RAILS_ENV=production bundler exec rake assets:precompile
+
+7.5 extjsインストール
+# cd /opt/tools
+# unzip ext-4.2.1-gpl.zip
+# cp -rp ext-4.2.1.883/examples/ux ext-4.2.1.883/src/
+# mv ext-4.2.1.883 /opt/jhako/frontends/public/ext
+
+7.6 famfamfamインストール
+# cd /opt/tools
+# unzip -d famfamfam famfamfam_silk_icons_v013.zip
+# mv famfamfam/icons /opt/jhako/frontends/public/images/
+
+7.7 Apache設定
+# cp -p /opt/tools/jhako-X.X.X/conf/jhako_apache.conf /etc/httpd/conf.d/
+/etc/httpd/conf.d/jhako_apache.confのpassenger情報を適切なパスに編集してください
+
+LoadModule passenger_module /usr/local/share/gems/gems/passenger-5.0.6/buildout/apache2/mod_passenger.so
+<IfModule mod_passenger.c>
+  PassengerRoot /usr/local/share/gems/gems/passenger-5.0.6
+  PassengerDefaultRuby /usr/bin/ruby
+</IfModule>
+
+7.8 公開ページのリング作成
+# rm -f /var/www/html/jhako
+# ln -s /opt/jhako/frontends/public /var/www/html/jhako
+
+6.9 オーナー権変更
+# chown -R apache:apache /opt/jhako/frontends
+
+8. jHako Serverインストール
+8.1 ソースコンパイルとインストール
+# cd /opt/tools/jhako-X.X.X
+# ./configure --prefix=/opt/jhako
+# make
+# make install
+
+8.2 jhako_server.conf編集
+/opt/jhako/etc/jhako_server.confのデータベース接続情報を編集してください
+
+DBHost = localhost
+DBName = jhako
+DBUser = jhako
+DBPassword = jhako
+
+9. 起動とサービス登録
+9.1 サービス登録
+# cp -p /opt/tools/jhako-X.X.X/misc/system/jhako-server.service /usr/lib/systemd/system/
+
+8.2 自動起動設定
+# systemctl enable mariadb.service
+# systemctl enable httpd.service
+# systemctl enable jhako-server.service
+
+9.3 再起動
+# systemctl restart mariadb.service
+# systemctl restart httpd.service
+# systemctl restart jhako-server.service
+
+9.4 起動確認
+# systemctl status jhako-server 
+
+10. jHako動作確認
+対応ブラウザにて以下のURL(xxx.xxx.xxx.xxxはjhakoをインストールしたIPアドレスもしくはホスト名に変換）を実行してください
+http://xxx.xxx.xxx.xxx/jhako
+初期ユーザ名とパスワードは以下を使用してください
+
+Username: admin
+Password: jhako

@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# jhako-server Startup script for the jHako Server
+#
+# chkconfig: - 90 15
+# description:  jHako Server
+# processname: jhako_server
+# config: /opt/jhako/etc/jhako_server.conf
+# pidfile: /opt/jhako/run/jhako_server.pid
+
+# jhako details
+BIN=/opt/jhako/sbin/jhako_server
+CONF=/opt/jhako/etc/jhako_server.conf
+PIDFILE=/opt/jhako/run/jhako_server.pid
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# Check that networking is up.
+[ ${NETWORKING} = "no" ] && exit 0
+
+[ -e $CONF ] || exit 6
+
+RETVAL=0
+
+case "$1" in
+    start)
+        echo -n "Starting jHako Server: "
+        daemon $BIN -c $CONF
+        RETVAL=$?
+        echo
+        [ $RETVAL -eq 0 ] && touch /opt/jhako/lock/jhako_server
+        ;;
+    stop)
+        echo -n "Shutting down jHako Server: "
+        killproc -p $PIDFILE
+        RETVAL=$?
+        echo
+        [ $RETVAL -eq 0 ] && rm -f /opt/jhako/lock/jhako_server
+        ;;
+    restart)
+        $0 stop
+        sleep 3
+        $0 start
+        RETVAL=$?
+        ;;
+    condrestart)
+        if [ -f /opt/jhako/lock/jhako_server ]; then
+            $0 stop
+            $0 start
+        fi
+        RETVAL=$?
+        ;;
+    status)
+        status $BIN
+        RETVAL=$?
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart|condrestart|status}"
+        exit 1
+        ;;
+esac
+
+exit $RETVAL

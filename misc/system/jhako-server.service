@@ -1,0 +1,16 @@
+[Unit]
+Description=jHako Server
+After=syslog.target
+After=network.target
+
+[Service]
+Environment="CONFFILE=/opt/jhako/etc/jhako_server.conf"
+EnvironmentFile=-/etc/sysconfig/jhako-server
+Type=forking
+Restart=always
+PIDFile=/opt/jhako/run/jhako_server.pid
+KillMode=process
+ExecStart=/opt/jhako/sbin/jhako_server -c $CONFFILE
+
+[Install]
+WantedBy=multi-user.target

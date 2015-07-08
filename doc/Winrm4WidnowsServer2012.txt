@@ -1,0 +1,75 @@
+WindowsServer2012R2向けWinRM設定ガイド
+
+1. WinRM事前確認
+PowerShellがインストールされていることを確認
+
+スタート画面(UI)にPowerShellが表示されていること
+インストールバージョンの確認
+
+PoerShellをダブルクリックで起動し以下のコマンドを入力しEnterを押下します。
+PS> get-host | findstr Version
+
+以下のように表示されることを確認します。
+Vsersion:4.0
+
+2. サービスの確認
+services.mscを起動します。
+
+Win+Rを入力します。
+services.mscと入力しEnterを押下します。
+
+MMCが起動したことを確認します。
+「Windows Remote Management (WS-Management)」を右クリックしプロパティを表示します。
+
+スタートアップの種類が自動（遅延開始）になっていることを確認します。
+
+3. WinRM設定
+3.1 PowerShellの起動
+PowerShellを右クリックし管理者として実行を選択します。
+
+スタート＞PowerShell＞（右クリック）＞管理者として実行
+
+PowerShellが入力待機状態になったことを確認します。
+
+3.2 WinRMの有効化
+
+以下のコマンドを入力しEnterを押下します。
+
+PS> Enable-PSRemoting
+
+すべての問いに対してYを入力します。
+
+3.3 WinRM設定動作確認
+設定情報の確認
+
+以下のコマンドを入力しEnterを入力します。
+
+PS> winrm get winrm/config
+
+設定情報の一覧が表示されます。
+
+3.4 各種設定
+以下の手順は導入する環境によって設定を実施してください。
+※jHakoとの通信にBASIC認証を使用する
+
+以下のコマンドを入力しEnterを押下します。
+PS> Set-Item WSMan:\localhost\Service\Auth\Basic True
+
+以下のコマンドを入力しEnterを押下します。
+PS> Get-Item WSMan:\localhost\Service\Auth\Basic True
+
+BASICがTrueになっていることを確認します。
+
+Name                      Value
+----                      -----
+Basic                     true
+
+jHakoとの通信にHTTP認証を使用する
+
+以下のコマンドを入力しEnterを押下します。
+PS> Set-Item WSMan:\localhost\Service\AllowUnencrypted True
+
+以下のコマンドを入力しEnterを押下します。
+PS> Get-Item WSMan:\localhost\Service\AllowUnencrypted
+
+AllowUnencryptedがTrueになっていることを確認します。

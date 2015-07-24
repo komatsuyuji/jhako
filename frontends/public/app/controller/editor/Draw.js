@@ -131,20 +131,20 @@ Ext.define('Jhako.controller.editor.Draw', {
       jobname = 'job';
     }
     var name = JhakoMakeName(store, jobname, '');
-    var jobunit = new Jhako.model.Jobunit({
-      name: name,
-      parent_id: jhako_selected_parent.data.id,
-      kind: image.jobunitkind,
-      x: pos_x,
-      y: pos_y
-    });
 
-    jobunit.save({
-      success: function(rec, operation) {
-        var ctrl = Jhako.app.getController('editor.Tree');
-        ctrl.onLoadJobunit(jhako_selected_parent.data.id);
-      }
-    });
+
+    if (jhako_selected_parent['jhako.model.jobunitsStore']) {
+        jhako_selected_parent['jhako.model.jobunitsStore'].add({
+        name: name,
+        parent_id: jhako_selected_parent.data.id,
+        kind: image.jobunitkind,
+        x: pos_x,
+        y: pos_y
+      });
+    }
+
+    var ctrl = Jhako.app.getController('common.Jobnet');
+    ctrl.onSaveRecord();
   },
 
   /////////////////////////////////////////////////////////////////////////////////

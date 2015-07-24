@@ -118,7 +118,7 @@ zh_CN:
       ready: "运行开始"
       running: "运行中"
       end: "正常结束"
-      error: "出国"
+      error: "出错"
       out_schedule: "超期"
       carry_over: "过期未运行"
       force_stop: "强制结束"

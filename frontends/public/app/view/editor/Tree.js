@@ -45,11 +45,11 @@ Ext.define('Jhako.view.editor.Tree', {
   useArrows: false,
   viewConfig: {
     toggleOnDblClick: false,
-    allowCopy: true,
-    plugins: {
-      ptype: 'treeviewdragdrop',
-      containerScroll: true
-    }
+    //allowCopy: true,
+    //plugins: {
+    //  ptype: 'treeviewdragdrop',
+    //  containerScroll: true
+    //}
   },
   icon: location.pathname + '/images/icons/application_side_tree.png',
   initComponent: function() {

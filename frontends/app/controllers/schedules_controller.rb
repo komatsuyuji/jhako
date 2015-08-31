@@ -38,7 +38,7 @@ class SchedulesController < ApplicationController
   def index
     jobunit = Jobunit.find(params[:jobunit_id])
     schedules = jobunit.schedules
-    render :json => schedules
+    render :json => schedules.as_json
   end
 
 #################################################################################
@@ -56,8 +56,7 @@ class SchedulesController < ApplicationController
 #################################################################################
   def show
     schedule = Schedule.find(params[:id])
-    schedule.include_root_in_json = true
-    render :json => schedule
+    render :json => schedule.as_json(:root => true)
   end
 
 #################################################################################

@@ -87,8 +87,8 @@ Ext.define('Jhako.controller.editor.JobunitTab', {
     var mode = TOPJOBNET_MODE_SPECIFIED;
     var schedule_time = null;
     var bbar = panel.getDockedItems('toolbar[dock="bottom"]');
-    var dd = panel.query('#df_manualrun')[0].getValue();
-    var tt = panel.query('#tf_manualrun')[0].getValue();
+    var dd = panel.down('#df_manualrun').getValue();
+    var tt = panel.down('#tf_manualrun').getValue();
     var msg;
 
     if (dd && tt) {
@@ -282,6 +282,12 @@ Ext.define('Jhako.controller.editor.JobunitTab', {
           tab.setActiveTab('comm_winjob');
           break;
         }
+      case JOBUNIT_KIND_EMAILJOB:
+        {
+          ctrl = Jhako.app.getController('common.Emailjob');
+          tab.setActiveTab('comm_emailjob');
+          break;
+        }
       default:
         {
           tab.setActiveTab('comm_jobnet');
@@ -363,6 +369,11 @@ Ext.define('Jhako.controller.editor.JobunitTab', {
       case 'comm_winjob':
         {
           ctrl = Jhako.app.getController('common.Winjob');
+          break;
+        }
+      case 'comm_emailjob':
+        {
+          ctrl = Jhako.app.getController('common.Emailjob');
           break;
         }
       default:
@@ -450,6 +461,11 @@ Ext.define('Jhako.controller.editor.JobunitTab', {
       case 'comm_winjob':
         {
           ctrl = Jhako.app.getController('common.Winjob');
+          break;
+        }
+      case 'comm_emailjob':
+        {
+          ctrl = Jhako.app.getController('common.Emailjob');
           break;
         }
       default:

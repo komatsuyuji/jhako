@@ -65,6 +65,8 @@ Ext.define('Jhako.view.process.JobunitTab', {
     xtype: 'commonSshjob'
   }, {
     xtype: 'commonWinjob',
+  }, {
+    xtype: 'commonEmailjob',
   }],
   initComponent: function() {
     this.callParent();

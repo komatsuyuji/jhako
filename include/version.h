@@ -26,7 +26,7 @@
 
 #define APPLICATION_NAME        "jHako"
 #define JHAKO_VERSION_MAJOR    0
-#define JHAKO_VERSION_MINOR    1
+#define JHAKO_VERSION_MINOR    2
 #define JHAKO_VERSION_PATCH    0
 #define JHAKO_VERSION_RC       ""
 

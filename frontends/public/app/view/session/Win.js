@@ -33,7 +33,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 Ext.define('Jhako.view.session.Win', {
   alias: 'widget.sessionWin',
-  extend: 'Ext.Window',
+  extend: 'Ext.window.Window',
   title: 'Loign Window',
   width: 300,
   autoHeight: true,

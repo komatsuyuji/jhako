@@ -37,9 +37,9 @@ void jhkssh_destroy(jhkssh_t * obj);
 int jhkssh_init(jhkssh_t * obj);
 
 int jhkssh_session(jhkssh_t * obj, const char *host, const int port);
-int jhkssh_userauth_password(jhkssh_t * obj, const char *user,
+int jhkssh_userauth_password(jhkssh_t * obj, const char *username,
                              const char *password);
-int jhkssh_userauth_publickey(jhkssh_t * obj, const char *user,
+int jhkssh_userauth_publickey(jhkssh_t * obj, const char *username,
                               const char *privatekey,
                               const char *passphrase);
 int jhkssh_channel(jhkssh_t * obj);

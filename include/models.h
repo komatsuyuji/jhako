@@ -30,6 +30,7 @@
 #define JOBUNIT_KIND_VARJOB 106
 #define JOBUNIT_KIND_SSHJOB 200
 #define JOBUNIT_KIND_WINJOB 201
+#define JOBUNIT_KIND_EMAILJOB 300
 
 #define JOBUNIT_STATUS_NONE 0
 #define JOBUNIT_STATUS_STANDBY 1
@@ -48,6 +49,7 @@
 #define TOPJOBNET_MODE_SCHEDULE 0
 #define TOPJOBNET_MODE_IMMEDIATE 1
 #define TOPJOBNET_MODE_SPECIFIED 2
+#define TOPJOBNET_MODE_ALARM 3
 
 #define CONNECTOR_KIND_NORMAL 0
 #define CONNECTOR_KIND_BRANCH 1
@@ -98,6 +100,7 @@
 #include "jobunit.h"
 #include "rootjobnet.h"
 #include "schedule.h"
+#include "alarm.h"
 #include "connector.h"
 #include "variable.h"
 #include "sleepjob.h"
@@ -108,6 +111,7 @@
 #include "sshjob.h"
 #include "winjob.h"
 #include "condition.h"
+#include "emailjob.h"
 #include "jobresult.h"
 #include "execlog.h"
 #include "jhkjoblog.h"

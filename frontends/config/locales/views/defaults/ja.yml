@@ -20,6 +20,7 @@ ja:
       jobresult: "ジョブ実行結果"
       setting: "設定画面"
       users: "ユーザ一覧"
+      user_profile: "ユーザプロファイル"
       list: "一覧"
       tree: "ツリー"
       error_condition: "エラー停止条件"
@@ -65,6 +66,7 @@ ja:
       add: "追加"
       delete: "削除"
       save: "保存"
+      select: "選択"
       cancel: "キャンセル"
       clear: "クリア"
       clear_filter: "フィルタ解除"
@@ -82,6 +84,7 @@ ja:
     model:
       rootjobnet: "ルートジョブネット"
       schedule: "スケジュール"
+      alarm: "アラーム"
       jobnet: "ジョブネット"
       variable: "変数"
       job: "ジョブ"
@@ -120,6 +123,7 @@ ja:
       varjob: "変数ジョブ"
       sshjob: "SSHジョブ"
       winjob: "Windowsジョブ"
+      emailjob: "Emailジョブ"
     jobunit_status:
       none: "未実行"
       standby: "実行準備"
@@ -130,6 +134,8 @@ ja:
       out_schedule: "スケジュールオーバー"
       carry_over: "繰り越し未実行"
       force_stop: "強制終了"
+    alarm:
+      path: "パス"
     topjobnet:
       mode: "モード"
       schedule_time: "予定時刻"
@@ -137,6 +143,7 @@ ja:
       schedule: "スケジュール実行"
       immediate: "即時実行"
       specified: "指定時刻実行"
+      alarm: "警報実行"
     rootjobnet:
       disabled: "無効"
       active_since: "開始日"
@@ -154,7 +161,7 @@ ja:
     job:
       host: "ホスト"
       port: "ポート"
-      user: "ユーザ"
+      username: "ユーザ名"
       password: "パスワード"
       codepage: "文字コード"
       command: "コマンド"
@@ -205,6 +212,13 @@ ja:
     condition:
       cond: "条件"
       negative: "否定"
+    emailjob:
+      host: "メールサーバー"
+      auth: "認証"
+      mail_from: "差出人"
+      mail_to: "宛先"
+      subject: "件名"
+      body: "本文"
     jobresult:
       exitcode: "リターンコード"
       exitsignal: "シグナル"

@@ -40,7 +40,7 @@ class SessionsController < ApplicationController
       return
     end
     data = {
-      :session => user
+      :session => user.as_json
     }
     render :json => data
   end

@@ -65,9 +65,10 @@ typedef struct {
 jhkwsman_t *jhkwsman_new(void);
 void jhkwsman_destroy(jhkwsman_t * obj);
 int jhkwsman_init(jhkwsman_t * obj);
-int jhkwsman_set(jhkwsman_t * obj, const char *user, const char *password,
-                 const char *scheme, const char *host, const int port,
-                 const char *path, const char *auth);
+int jhkwsman_set(jhkwsman_t * obj, const char *username,
+                 const char *password, const char *scheme,
+                 const char *host, const int port, const char *path,
+                 const char *auth);
 
 WsXmlDocH jhkwsman_send(jhkwsman_t * obj, WsXmlDocH request);
 int jhkwsman_soap_header(jhkwsman_t * obj, WsXmlDocH doc,

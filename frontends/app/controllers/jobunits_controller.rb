@@ -44,9 +44,10 @@ class JobunitsController < ApplicationController
     if !(params[:page].nil? || params[:limit].nil?)
       jobunits = jobunits.paginate(:page => params[:page], :per_page => params[:limit])
     end
+
     data = {
       :total_count => count,
-      :jobunits => jobunits
+      :jobunits => jobunits.as_json
     }
     render :json => data
   end
@@ -80,11 +81,13 @@ class JobunitsController < ApplicationController
       filename = jobunit.name + '.json'
     end
 
-    data = export(jobunit, export)
+    data = {
+      :jobunit => export(jobunit, export)
+    }
     if export == 0
       render :json => data
     else
-      send_data data, :filename => filename
+      send_data data.to_json, :filename => filename
     end
   end
 
@@ -130,7 +133,7 @@ class JobunitsController < ApplicationController
         render :json => failure_msg
         return
       end
-   
+
       # check upload data
       if data['jobunit'].nil?
         render :json => failure_msg
@@ -148,14 +151,16 @@ class JobunitsController < ApplicationController
           return
         end
 
+        # can not upload jobnet under jobgroup
         if parent.kind < 10 && kind >= 20 && kind < 100
-          # change jobnet to rootjobnet
-          data['jobunit']['kind'] = 10
-          data['jobunit']['x'] = 0
-          data['jobunit']['y'] = 0
-        elsif parent.kind >= 10 && parent.kind < 100 && kind >= 10 && kind < 20
-          # change rootjobnet to jobnet
-          data['jobunit']['kind'] = 20
+          render :json => failure_msg
+          return
+        end
+
+        # can not upload rootjobnet under jobnet
+        if parent.kind >= 10 && parent.kind < 100 && kind >= 10 && kind < 20
+          render :json => failure_msg
+          return
         end
       else
         # can not upload jobnet under root path
@@ -221,6 +226,9 @@ class JobunitsController < ApplicationController
     when 201 then
       # winjob
       jobunit.build_winjob
+    when 300 then
+      # emailjob
+      jobunit.build_emailjob
     else
       render :json => failure_msg
       return
@@ -312,6 +320,7 @@ class JobunitsController < ApplicationController
       if kind >= 10 && kind < 20 && jobunit.kind >= 20 && jobunit.kind < 100
         jobunit.rootjobnet.destroy
         jobunit.schedules.destroy
+        jobunit.alarms.destroy
       end
       render :json => success_msg
     else
@@ -368,73 +377,69 @@ class JobunitsController < ApplicationController
 #
 #################################################################################
   def export(jobunit, flag)
-    # add root tag
-    if flag == 0
-      jobunit.include_root_in_json = true
-    end
-
     case jobunit.kind
     when 0..9 then
       # jobgroup
       if flag == 0
-        data = jobunit.to_json(:include => [:children])
+        data = jobunit.as_json(:include => [:children])
       else
-        data = jobunit.to_json()
+        data = jobunit.as_json
       end
     when 10..19 then
       # rootjobnet
       if flag == 0
-        data = jobunit.to_json(:include => [:rootjobnet, :schedules, :connectors, :children])
+        data = jobunit.as_json(:include => [:rootjobnet, :schedules, :connectors, :children])
       else
-        data = jobunit.to_json(:include => [:rootjobnet, :schedules, :connectors])
+        data = jobunit.as_json(:include => [:rootjobnet, :schedules, :connectors])
       end
+      data = data.merge({
+        :alarms => jobunit.alarms.as_json
+      })
     when 20..99 then
       # jobnet
       if flag == 0
-        data = jobunit.to_json(:include => [:connectors, :children])
+        data = jobunit.as_json(:include => [:connectors, :children])
       else
-        data = jobunit.to_json(:include => [:connectors])
+        data = jobunit.as_json(:include => [:connectors])
       end
     when 100, 101, 102 then
       # startjob, endjob, mergejob
-      data = jobunit.to_json()
+      data = jobunit.as_json
     when 103 then
       # sleepjob
-      data = jobunit.to_json(:include => [:sleepjob])
+      data = jobunit.as_json(:include => [:sleepjob])
     when 104 then
       # clockjob
-      data = jobunit.to_json(:include => [:clockjob])
+      data = jobunit.as_json(:include => [:clockjob])
     when 105 then
       # datejob
-      data = jobunit.to_json(:include => [:datejob, :dateconds])
+      data = jobunit.as_json(:include => [:datejob, :dateconds])
     when 106 then
       # varjob
-      data = jobunit.to_json(:include => [:vardata])
+      data = jobunit.as_json(:include => [:vardata])
     when 200 then
       # sshjob
-      data = jobunit.to_json(:include => [:sshjob, :conditions])
+      data = jobunit.as_json(:include => [:sshjob, :conditions])
     when 201 then
       # winjob
-      data = jobunit.to_json(:include => [:winjob, :conditions])
+      data = jobunit.as_json(:include => [:winjob, :conditions])
+    when 300 then
+      # emailjob
+      data = jobunit.as_json(:include => [:emailjob])
     else
-      data = jobunit.to_json()
+      data = jobunit.as_json
     end
 
     if flag > 0 && jobunit.kind >= 0 && jobunit.kind < 100
-      data = data.sub(/\}$/, ',"children":[')
-      str = ''
+      children_data = []
       jobunit.children.each do |child|
-        if str != ''
-          str << ','
-        end
-        str << export(child, 2)
+        children_data.push(export(child, flag))
       end
-      data << str << ']}'
+      data = data.merge({
+        :children => children_data
+      })
     end
 
-    if flag == 1
-      data = '{"jobunit":' + data + '}'
-    end
     return data
   end
 
@@ -471,6 +476,7 @@ class JobunitsController < ApplicationController
       jobunit.rootjobnet.disabled = true
       jobunit.rootjobnet.user_id = 0
       jobunit.schedules.build(schedules_params(data)[:schedules])
+      jobunit.alarms.build(schedules_params(data)[:alarms])
     when 20..99 then
       # subjobnet
     when 100, 101, 102 then
@@ -501,6 +507,10 @@ class JobunitsController < ApplicationController
       jobunit.build_winjob
       jobunit.winjob.attributes = winjob_params(data)
       jobunit.conditions.build(conditions_params(data)[:conditions])
+    when 300 then
+      # emailjob
+      jobunit.build_emailjob
+      jobunit.emailjob.attributes = emailjob_params(data)
     else
       return 0
     end
@@ -639,6 +649,23 @@ class JobunitsController < ApplicationController
 # Author: Komatsu Yuji(Zheng Chuyu)
 #
 #################################################################################
+    def alarms_params(input_params)
+      input_params.permit(:alarms => [:status, :jobnet_id])
+    end
+
+#################################################################################
+#
+# Function:
+#
+# Purpose:
+#
+# Parameters:
+#
+# Return value:
+#
+# Author: Komatsu Yuji(Zheng Chuyu)
+#
+#################################################################################
     def sleepjob_params(input_params)
       input_params.require(:sleepjob).permit(:hour, :minute, :second)
     end
@@ -725,7 +752,7 @@ class JobunitsController < ApplicationController
 #
 #################################################################################
     def sshjob_params(input_params)
-      input_params.require(:sshjob).permit(:host, :authtype, :user, :password, :port, :privatekey, :command)
+      input_params.require(:sshjob).permit(:host, :port, :authtype, :username, :password, :privatekey, :command)
     end
 
 #################################################################################
@@ -742,7 +769,7 @@ class JobunitsController < ApplicationController
 #
 #################################################################################
     def winjob_params(input_params)
-      input_params.require(:winjob).permit(:host, :user, :password, :scheme, :port, :path, :auth, :codepage, :command)
+      input_params.require(:winjob).permit(:host, :port, :username, :password, :scheme, :path, :auth, :codepage, :command)
     end
 
 #################################################################################
@@ -761,4 +788,22 @@ class JobunitsController < ApplicationController
     def conditions_params(input_params)
       input_params.permit(:conditions =>[:method, :kind, :cond, :negative])
     end
+
+#################################################################################
+#
+# Function:
+#
+# Purpose:
+#
+# Parameters:
+#
+# Return value:
+#
+# Author: Komatsu Yuji(Zheng Chuyu)
+#
+#################################################################################
+    def emailjob_params(input_params)
+      input_params.require(:emailjob).permit(:host, :port, :auth, :username, :password, :mail_from, :mail_to, :subject, :body)
+    end
+    
 end

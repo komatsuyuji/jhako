@@ -11,7 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150604092917) do
+ActiveRecord::Schema.define(version: 20150828054943) do
+
+  create_table "alarms", force: :cascade do |t|
+    t.integer "jobunit_id", limit: 8, default: 0, null: false
+    t.integer "status",     limit: 4, default: 0, null: false
+    t.integer "jobnet_id",  limit: 8, default: 0, null: false
+  end
+
+  add_index "alarms", ["jobunit_id"], name: "index_alarms_on_jobunit_id", using: :btree
 
   create_table "calendar_dates", force: :cascade do |t|
     t.integer "calendar_id", limit: 8, default: 0, null: false
@@ -89,6 +97,29 @@ ActiveRecord::Schema.define(version: 20150604092917) do
 
   add_index "datejobs", ["jobunit_id"], name: "index_datejobs_on_jobunit_id", using: :btree
 
+  create_table "emailjobs", force: :cascade do |t|
+    t.integer "jobunit_id", limit: 8,     default: 0,           null: false
+    t.string  "host",       limit: 255,   default: "127.0.0.1", null: false
+    t.integer "port",       limit: 4,     default: 25,          null: false
+    t.boolean "auth",       limit: 1,     default: false,       null: false
+    t.string  "username",   limit: 255,   default: "",          null: false
+    t.string  "password",   limit: 255,   default: "",          null: false
+    t.string  "mail_from",  limit: 255,   default: "",          null: false
+    t.string  "mail_to",    limit: 255,   default: "",          null: false
+    t.string  "subject",    limit: 255,   default: "",          null: false
+    t.text    "body",       limit: 65535
+  end
+
+  add_index "emailjobs", ["jobunit_id"], name: "index_emailjobs_on_jobunit_id", using: :btree
+
+  create_table "hist_alarms", force: :cascade do |t|
+    t.integer "hist_jobunit_id", limit: 8, default: 0, null: false
+    t.integer "status",          limit: 4, default: 0, null: false
+    t.integer "jobnet_id",       limit: 8, default: 0, null: false
+  end
+
+  add_index "hist_alarms", ["hist_jobunit_id"], name: "index_hist_alarms_on_hist_jobunit_id", using: :btree
+
   create_table "hist_clockjobs", force: :cascade do |t|
     t.integer  "hist_jobunit_id",    limit: 8, default: 0, null: false
     t.integer  "basetime",           limit: 4, default: 0, null: false
@@ -138,6 +169,21 @@ ActiveRecord::Schema.define(version: 20150604092917) do
   end
 
   add_index "hist_datejobs", ["hist_jobunit_id"], name: "index_hist_datejobs_on_hist_jobunit_id", using: :btree
+
+  create_table "hist_emailjobs", force: :cascade do |t|
+    t.integer "hist_jobunit_id", limit: 8,     default: 0,           null: false
+    t.string  "host",            limit: 255,   default: "127.0.0.1", null: false
+    t.integer "port",            limit: 4,     default: 25,          null: false
+    t.boolean "auth",            limit: 1,     default: false,       null: false
+    t.string  "username",        limit: 255,   default: "",          null: false
+    t.string  "password",        limit: 255,   default: "",          null: false
+    t.string  "mail_from",       limit: 255,   default: "",          null: false
+    t.string  "mail_to",         limit: 255,   default: "",          null: false
+    t.string  "subject",         limit: 255,   default: "",          null: false
+    t.text    "body",            limit: 65535
+  end
+
+  add_index "hist_emailjobs", ["hist_jobunit_id"], name: "index_hist_emailjobs_on_hist_jobunit_id", using: :btree
 
   create_table "hist_jobresults", force: :cascade do |t|
     t.integer  "hist_jobunit_id", limit: 8,     default: 0,  null: false
@@ -211,11 +257,11 @@ ActiveRecord::Schema.define(version: 20150604092917) do
 
   create_table "hist_sshjobs", force: :cascade do |t|
     t.integer "hist_jobunit_id", limit: 8,     default: 0,  null: false
-    t.integer "authtype",        limit: 4,     default: 0,  null: false
     t.string  "host",            limit: 255,   default: "", null: false
-    t.string  "user",            limit: 255,   default: "", null: false
+    t.integer "port",            limit: 4,     default: 22, null: false
+    t.integer "authtype",        limit: 4,     default: 0,  null: false
+    t.string  "username",        limit: 255,   default: "", null: false
     t.string  "password",        limit: 255,   default: "", null: false
-    t.integer "port",            limit: 4,     default: 0,  null: false
     t.text    "privatekey",      limit: 65535
     t.text    "command",         limit: 65535
   end
@@ -242,15 +288,15 @@ ActiveRecord::Schema.define(version: 20150604092917) do
   add_index "hist_variables", ["hist_jobunit_id"], name: "index_hist_variables_on_hist_jobunit_id", using: :btree
 
   create_table "hist_winjobs", force: :cascade do |t|
-    t.integer "hist_jobunit_id", limit: 8,     default: 0,   null: false
-    t.string  "host",            limit: 255,   default: "",  null: false
-    t.string  "user",            limit: 255,   default: "",  null: false
-    t.string  "password",        limit: 255,   default: "",  null: false
-    t.string  "scheme",          limit: 255,   default: "",  null: false
-    t.integer "port",            limit: 4,     default: 0,   null: false
-    t.string  "path",            limit: 255,   default: "",  null: false
-    t.string  "auth",            limit: 255,   default: "",  null: false
-    t.integer "codepage",        limit: 4,     default: 932, null: false
+    t.integer "hist_jobunit_id", limit: 8,     default: 0,        null: false
+    t.string  "host",            limit: 255,   default: "",       null: false
+    t.integer "port",            limit: 4,     default: 5985,     null: false
+    t.string  "username",        limit: 255,   default: "",       null: false
+    t.string  "password",        limit: 255,   default: "",       null: false
+    t.string  "scheme",          limit: 255,   default: "http",   null: false
+    t.string  "path",            limit: 255,   default: "/wsman", null: false
+    t.string  "auth",            limit: 255,   default: "basic",  null: false
+    t.integer "codepage",        limit: 4,     default: 932,      null: false
     t.text    "command",         limit: 65535
   end
 
@@ -272,6 +318,14 @@ ActiveRecord::Schema.define(version: 20150604092917) do
 
   add_index "jobunits", ["kind"], name: "index_jobunits_on_kind", using: :btree
   add_index "jobunits", ["name", "parent_id"], name: "index_jobunits_on_name_and_parent_id", unique: true, using: :btree
+
+  create_table "proc_alarms", force: :cascade do |t|
+    t.integer "proc_jobunit_id", limit: 8, default: 0, null: false
+    t.integer "status",          limit: 4, default: 0, null: false
+    t.integer "jobnet_id",       limit: 8, default: 0, null: false
+  end
+
+  add_index "proc_alarms", ["proc_jobunit_id"], name: "index_proc_alarms_on_proc_jobunit_id", using: :btree
 
   create_table "proc_clockjobs", force: :cascade do |t|
     t.integer  "proc_jobunit_id",    limit: 8, default: 0, null: false
@@ -323,6 +377,21 @@ ActiveRecord::Schema.define(version: 20150604092917) do
   end
 
   add_index "proc_datejobs", ["proc_jobunit_id"], name: "index_proc_datejobs_on_proc_jobunit_id", using: :btree
+
+  create_table "proc_emailjobs", force: :cascade do |t|
+    t.integer "proc_jobunit_id", limit: 8,     default: 0,           null: false
+    t.string  "host",            limit: 255,   default: "127.0.0.1", null: false
+    t.integer "port",            limit: 4,     default: 25,          null: false
+    t.boolean "auth",            limit: 1,     default: false,       null: false
+    t.string  "username",        limit: 255,   default: "",          null: false
+    t.string  "password",        limit: 255,   default: "",          null: false
+    t.string  "mail_from",       limit: 255,   default: "",          null: false
+    t.string  "mail_to",         limit: 255,   default: "",          null: false
+    t.string  "subject",         limit: 255,   default: "",          null: false
+    t.text    "body",            limit: 65535
+  end
+
+  add_index "proc_emailjobs", ["proc_jobunit_id"], name: "index_proc_emailjobs_on_proc_jobunit_id", using: :btree
 
   create_table "proc_execlogs", force: :cascade do |t|
     t.integer  "proc_jobunit_id", limit: 8,     default: 0, null: false
@@ -411,11 +480,11 @@ ActiveRecord::Schema.define(version: 20150604092917) do
 
   create_table "proc_sshjobs", force: :cascade do |t|
     t.integer "proc_jobunit_id", limit: 8,     default: 0,  null: false
-    t.integer "authtype",        limit: 4,     default: 0,  null: false
     t.string  "host",            limit: 255,   default: "", null: false
-    t.string  "user",            limit: 255,   default: "", null: false
+    t.integer "port",            limit: 4,     default: 22, null: false
+    t.integer "authtype",        limit: 4,     default: 0,  null: false
+    t.string  "username",        limit: 255,   default: "", null: false
     t.string  "password",        limit: 255,   default: "", null: false
-    t.integer "port",            limit: 4,     default: 0,  null: false
     t.text    "privatekey",      limit: 65535
     t.text    "command",         limit: 65535
   end
@@ -439,6 +508,7 @@ ActiveRecord::Schema.define(version: 20150604092917) do
     t.boolean  "force_start",     limit: 1,     default: false, null: false
     t.boolean  "force_stop",      limit: 1,     default: false, null: false
     t.integer  "proc_jobunit_id", limit: 8,     default: 0,     null: false
+    t.integer  "proc_alarm_id",   limit: 8,     default: 0,     null: false
     t.integer  "mode",            limit: 4,     default: 0,     null: false
     t.datetime "schedule_time"
     t.integer  "run_type",        limit: 4,     default: 0,     null: false
@@ -470,15 +540,15 @@ ActiveRecord::Schema.define(version: 20150604092917) do
   add_index "proc_variables", ["proc_jobunit_id"], name: "index_proc_variables_on_proc_jobunit_id", using: :btree
 
   create_table "proc_winjobs", force: :cascade do |t|
-    t.integer "proc_jobunit_id", limit: 8,     default: 0,   null: false
-    t.string  "host",            limit: 255,   default: "",  null: false
-    t.string  "user",            limit: 255,   default: "",  null: false
-    t.string  "password",        limit: 255,   default: "",  null: false
-    t.string  "scheme",          limit: 255,   default: "",  null: false
-    t.integer "port",            limit: 4,     default: 0,   null: false
-    t.string  "path",            limit: 255,   default: "",  null: false
-    t.string  "auth",            limit: 255,   default: "",  null: false
-    t.integer "codepage",        limit: 4,     default: 932, null: false
+    t.integer "proc_jobunit_id", limit: 8,     default: 0,        null: false
+    t.string  "host",            limit: 255,   default: "",       null: false
+    t.integer "port",            limit: 4,     default: 5985,     null: false
+    t.string  "username",        limit: 255,   default: "",       null: false
+    t.string  "password",        limit: 255,   default: "",       null: false
+    t.string  "scheme",          limit: 255,   default: "http",   null: false
+    t.string  "path",            limit: 255,   default: "/wsman", null: false
+    t.string  "auth",            limit: 255,   default: "basic",  null: false
+    t.integer "codepage",        limit: 4,     default: 932,      null: false
     t.text    "command",         limit: 65535
   end
 
@@ -521,11 +591,11 @@ ActiveRecord::Schema.define(version: 20150604092917) do
 
   create_table "sshjobs", force: :cascade do |t|
     t.integer "jobunit_id", limit: 8,     default: 0,  null: false
-    t.integer "authtype",   limit: 4,     default: 0,  null: false
     t.string  "host",       limit: 255,   default: "", null: false
-    t.string  "user",       limit: 255,   default: "", null: false
-    t.string  "password",   limit: 255,   default: "", null: false
     t.integer "port",       limit: 4,     default: 22, null: false
+    t.integer "authtype",   limit: 4,     default: 0,  null: false
+    t.string  "username",   limit: 255,   default: "", null: false
+    t.string  "password",   limit: 255,   default: "", null: false
     t.text    "privatekey", limit: 65535
     t.text    "command",    limit: 65535
   end
@@ -559,10 +629,10 @@ ActiveRecord::Schema.define(version: 20150604092917) do
   create_table "winjobs", force: :cascade do |t|
     t.integer "jobunit_id", limit: 8,     default: 0,        null: false
     t.string  "host",       limit: 255,   default: "",       null: false
-    t.string  "user",       limit: 255,   default: "",       null: false
+    t.integer "port",       limit: 4,     default: 5985,     null: false
+    t.string  "username",   limit: 255,   default: "",       null: false
     t.string  "password",   limit: 255,   default: "",       null: false
     t.string  "scheme",     limit: 255,   default: "http",   null: false
-    t.integer "port",       limit: 4,     default: 5985,     null: false
     t.string  "path",       limit: 255,   default: "/wsman", null: false
     t.string  "auth",       limit: 255,   default: "basic",  null: false
     t.integer "codepage",   limit: 4,     default: 932,      null: false

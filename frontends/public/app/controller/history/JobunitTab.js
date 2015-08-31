@@ -139,6 +139,12 @@ Ext.define('Jhako.controller.history.JobunitTab', {
           tab.setActiveTab('comm_winjob');
           break;
         }
+      case JOBUNIT_KIND_EMAILJOB:
+        {
+          ctrl = Jhako.app.getController('common.Emailjob');
+          tab.setActiveTab('comm_emailjob');
+          break;
+        }
       default:
         {
           tab.setActiveTab('comm_jobnet');

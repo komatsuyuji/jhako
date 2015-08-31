@@ -51,11 +51,11 @@ int proc_jobresult_select(jobresult_t * obj,
 apr_uint64_t proc_jobresult_insert(jobresult_t * obj);
 apr_uint64_t hist_jobresult_insert(jobresult_t * obj);
 
-int jobresult_put_history(const apr_uint64_t proc_jobunit_id,
-                          const apr_uint64_t hist_jobunit_id);
+int jobresults_put_history(const apr_uint64_t proc_jobunit_id,
+                           const apr_uint64_t hist_jobunit_id);
 
-int proc_jobresult_delete(const apr_uint64_t proc_jobunit_id);
-int hist_jobresult_delete(const apr_uint64_t hist_jobunit_id);
+int proc_jobresults_delete(const apr_uint64_t proc_jobunit_id);
+int hist_jobresults_delete(const apr_uint64_t hist_jobunit_id);
 
 int jobresult_execute(jobresult_t * obj);
 

@@ -73,12 +73,13 @@ Ext.define('Jhako.controller.common.Jobnet', {
     var form_rootjobnet = panel.child('#comm_rootjobnet');
     form_jobunit.updateRecord();
 
-
     var record = form_jobunit.getRecord();
     var rec_rootjobnet = record['Jhako.model.RootjobnetHasOneInstance'];
     var store_jobunits = record['jhako.model.jobunitsStore'];
     var store_connectors = record['jhako.model.connectorsStore'];
     var store_schedules = record['jhako.model.schedulesStore'];
+    var store_alarms = record['jhako.model.alarmsStore'];
+
     jhako_mask.show();
 
     // rootjobnet
@@ -112,6 +113,15 @@ Ext.define('Jhako.controller.common.Jobnet', {
         store_schedules['isSyncing'] = false;
       } else {
         store_schedules['isSyncing'] = true;
+      }
+    };
+
+    // alarms
+    if (store_alarms) {
+      if (store_alarms.getModifiedRecords().length == 0 && store_alarms.getRemovedRecords().length == 0) {
+        store_alarms['isSyncing'] = false;
+      } else {
+        store_alarms['isSyncing'] = true;
       }
     };
 
@@ -149,6 +159,14 @@ Ext.define('Jhako.controller.common.Jobnet', {
         }
       });
     };
+    if (store_alarms) {
+      store_alarms.sync({
+        callback: function() {
+          store_alarms['isSyncing'] = false;
+          me.onReloadReacord(record);
+        }
+      });
+    };
 
     record.save({
       callback: function() {
@@ -178,6 +196,7 @@ Ext.define('Jhako.controller.common.Jobnet', {
     var store_jobunits = record['jhako.model.jobunitsStore'];
     var store_connectors = record['jhako.model.connectorsStore'];
     var store_schedules = record['jhako.model.schedulesStore'];
+    var store_alarms = record['jhako.model.alarmsStore'];
 
     if (rec_rootjobnet && rec_rootjobnet['isSyncing']) {
       is_syncing = rec_rootjobnet['isSyncing'];
@@ -190,6 +209,9 @@ Ext.define('Jhako.controller.common.Jobnet', {
     };
     if (store_schedules && store_schedules['isSyncing']) {
       is_syncing = store_schedules['isSyncing'];
+    };
+    if (store_alarms && store_alarms['isSyncing']) {
+      is_syncing = store_alarms['isSyncing'];
     };
     if (record['isSyncing']) {
       is_syncing = record['isSyncing'];
@@ -246,10 +268,12 @@ Ext.define('Jhako.controller.common.Jobnet', {
     var form_jobunit = panel.child('#comm_jobunit');
     var form_rootjobnet = panel.child('#comm_rootjobnet');
     var grid_schedule = panel.child('#comm_schedule');
+    var grid_alarm = panel.child('#comm_alarm');
 
     JhakoSetForm(form_jobunit, record);
     var rec_rootjobnet = record['Jhako.model.RootjobnetHasOneInstance'];
     var store_schedule = record['jhako.model.schedulesStore'];
+    var store_alarm = record['jhako.model.alarmsStore'];
 
     if (rec_rootjobnet) {
       rec_rootjobnet.getProxy().url = location.pathname + '/jobunits/' + record.data.id + '/rootjobnets';
@@ -261,17 +285,24 @@ Ext.define('Jhako.controller.common.Jobnet', {
       grid_schedule.reconfigure(store_schedule);
     }
 
+    if (store_alarm) {
+      store_alarm.getProxy().url = location.pathname + '/jobunits/' + record.data.id + '/alarms';
+      grid_alarm.reconfigure(store_alarm);
+    }
+
     switch (record.data.kind) {
       case JOBUNIT_KIND_ROOTJOBNET:
         {
           form_rootjobnet.setVisible(true);
           grid_schedule.setVisible(true);
+          grid_alarm.setVisible(true);
           break;
         }
       case JOBUNIT_KIND_JOBNET:
         {
           form_rootjobnet.setVisible(false);
           grid_schedule.setVisible(false);
+          grid_alarm.setVisible(false);
           break;
         }
     }
@@ -301,6 +332,7 @@ Ext.define('Jhako.controller.common.Jobnet', {
     var form_jobunit = panel.child('#comm_jobunit');
     var form_rootjobnet = panel.child('#comm_rootjobnet');
     var grid_schedule = panel.child('#comm_schedule');
+    var grid_alarm = panel.child('#comm_alarm');
 
     JhakoSetForm(form_jobunit, record);
     if (record['Jhako.model.RootjobnetHasOneInstance']) {
@@ -309,18 +341,23 @@ Ext.define('Jhako.controller.common.Jobnet', {
     if (record['jhako.model.schedulesStore']) {
       grid_schedule.reconfigure(record['jhako.model.schedulesStore']);
     }
+    if (record['jhako.model.alarmsStore']) {
+      grid_alarm.reconfigure(record['jhako.model.alarmsStore']);
+    }
 
     switch (record.data.kind) {
       case JOBUNIT_KIND_ROOTJOBNET:
         {
           form_rootjobnet.setVisible(true);
           grid_schedule.setVisible(true);
+          grid_alarm.setVisible(true);
           break;
         }
       case JOBUNIT_KIND_JOBNET:
         {
           form_rootjobnet.setVisible(false);
           grid_schedule.setVisible(false);
+          grid_alarm.setVisible(false);
           break;
         }
     }
@@ -349,6 +386,7 @@ Ext.define('Jhako.controller.common.Jobnet', {
     var form_jobunit = panel.child('#comm_jobunit');
     var form_rootjobnet = panel.child('#comm_rootjobnet');
     var grid_schedule = panel.child('#comm_schedule');
+    var grid_alarm = panel.child('#comm_alarm');
 
     JhakoSetForm(form_jobunit, record);
     if (record['Jhako.model.RootjobnetHasOneInstance']) {
@@ -357,18 +395,23 @@ Ext.define('Jhako.controller.common.Jobnet', {
     if (record['jhako.model.schedulesStore']) {
       grid_schedule.reconfigure(record['jhako.model.schedulesStore']);
     }
+    if (record['jhako.model.alarmsStore']) {
+      grid_alarm.reconfigure(record['jhako.model.alarmsStore']);
+    }
 
     switch (record.data.kind) {
       case JOBUNIT_KIND_ROOTJOBNET:
         {
           form_rootjobnet.setVisible(true);
           grid_schedule.setVisible(true);
+          grid_alarm.setVisible(true);
           break;
         }
       case JOBUNIT_KIND_JOBNET:
         {
           form_rootjobnet.setVisible(false);
           grid_schedule.setVisible(false);
+          grid_alarm.setVisible(false);
           break;
         }
     }

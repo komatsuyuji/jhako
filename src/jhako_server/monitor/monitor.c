@@ -361,11 +361,19 @@ int monitor_jobnet(jobunit_t * obj)
                 jhkdb_execute
                 ("UPDATE proc_topjobnets SET status = %d, timeout_occur = %d, end_time = NULL, updated_at = '%s' WHERE proc_jobunit_id = %llu",
                  status, timeout_occur, ts, obj->id);
+
+            // only for timeout_occur
+            if (obj->timeout_occur == 0 && timeout_occur == 1) {
+                // check topjobnet alarm
+                alarms_execute(obj->id, JOBUNIT_STATUS_RUNNING);
+            }
         } else {
             rc_db =
                 jhkdb_execute
                 ("UPDATE proc_topjobnets SET status = %d, timeout_occur = %d, end_time = '%s', updated_at = '%s' WHERE proc_jobunit_id = %llu",
                  status, timeout_occur, ts, ts, obj->id);
+            // check topjobnet alarm
+            alarms_execute(obj->id, status);
         }
         if (rc_db != 0)
             return -1;

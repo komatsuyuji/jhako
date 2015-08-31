@@ -40,7 +40,7 @@ Ext.define('Jhako.view.common.Schedule', {
     defaults: {
       width: 75,
       editor: {
-        xtype: 'textfield'
+        xtype: 'textfield',
       }
     },
     items: [{
@@ -49,6 +49,7 @@ Ext.define('Jhako.view.common.Schedule', {
       editor: {
         xtype: 'combobox',
         multiSelect: true,
+        readOnly: true,
         delimiter: ',',
         store: [
           0, 1, 2, 3, 4, 5, 6
@@ -62,6 +63,7 @@ Ext.define('Jhako.view.common.Schedule', {
       editor: {
         xtype: 'combobox',
         multiSelect: true,
+        readOnly: true,
         delimiter: ',',
         store: [
           1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
@@ -75,6 +77,7 @@ Ext.define('Jhako.view.common.Schedule', {
       editor: {
         xtype: 'combobox',
         multiSelect: true,
+        readOnly: true,
         delimiter: ',',
         store: JHAKO_DAY_DATA,
         allowBlank: false,
@@ -86,6 +89,7 @@ Ext.define('Jhako.view.common.Schedule', {
       editor: {
         xtype: 'combobox',
         multiSelect: true,
+        readOnly: true,
         delimiter: ',',
         store: JHAKO_HOUR_DATA,
         allowBlank: false,
@@ -97,6 +101,7 @@ Ext.define('Jhako.view.common.Schedule', {
       editor: {
         xtype: 'combobox',
         multiSelect: true,
+        readOnly: true,
         delimiter: ',',
         store: JHAKO_MINUTE_DATA,
         allowBlank: false,

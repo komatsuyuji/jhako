@@ -38,7 +38,7 @@ execlog_t *execlog_new(void);
 void execlog_destroy(execlog_t * obj);
 int execlog_init(execlog_t * obj);
 int execlog_load(execlog_t * obj, dbi_result res);
-int proc_execlog_delete(const apr_uint64_t proc_jobunit_id);
+int proc_execlogs_delete(const apr_uint64_t proc_jobunit_id);
 
 apr_uint64_t execlog_append(const apr_uint64_t proc_jobunit_id,
                             const int kind, const int code,

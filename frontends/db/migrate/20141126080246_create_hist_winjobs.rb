@@ -23,12 +23,12 @@ class CreateHistWinjobs < ActiveRecord::Migration
     create_table :hist_winjobs do |t|
       t.integer :hist_jobunit_id, :null => false, :default => 0, :limit => 8
       t.string :host, :null => false, :default => ''
-      t.string :user, :null => false, :default => ''
+      t.integer :port, :null => false, :default => 5985
+      t.string :username, :null => false, :default => ''
       t.string :password, :null => false, :default => ''
-      t.string :scheme, :null => false, :default => ''
-      t.integer :port, :null => false, :default => 0
-      t.string :path, :null => false, :default => ''
-      t.string :auth, :null => false, :default => ''
+      t.string :scheme, :null => false, :default => 'http'
+      t.string :path, :null => false, :default => '/wsman'
+      t.string :auth, :null => false, :default => 'basic'
       t.integer :codepage, :null => false, :default => 932
       t.text :command
 

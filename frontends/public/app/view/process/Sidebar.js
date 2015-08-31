@@ -50,7 +50,6 @@ Ext.define('Jhako.view.process.Sidebar', {
     disabled: true,
     tooltip: 'Hold Job',
     action: 'hold_jobunit',
-    itemId: 'btn_hold_proc_jobunit'
   }, '-', {
     text: I18n.t('views.button.skip'),
     icon: location.pathname + '/images/icons/control_fastforward_blue.png',
@@ -58,21 +57,18 @@ Ext.define('Jhako.view.process.Sidebar', {
     disabled: true,
     tooltip: 'Skip Job',
     action: 'skip_jobunit',
-    itemId: 'btn_skip_proc_jobunit'
   }, '-', {
     text: I18n.t('views.button.start'),
     icon: location.pathname + '/images/icons/control_play_blue.png',
     disabled: true,
     tooltip: 'Force Start',
     action: 'forcestart_jobunit',
-    itemId: 'btn_forcestart_proc_jobunit'
   }, '-', {
     text: I18n.t('views.button.stop'),
     icon: location.pathname + '/images/icons/control_stop_blue.png',
     disabled: true,
     tooltip: 'Force Stop',
     action: 'forcestop_jobunit',
-    itemId: 'btn_forcestop_proc_jobunit'
   }],
 
   items: [{

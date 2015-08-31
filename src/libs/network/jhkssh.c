@@ -262,21 +262,22 @@ int jhkssh_session(jhkssh_t * obj, const char *host, const int port)
 // Author: Komatsu Yuji(Zheng Chuyu)
 //
 /////////////////////////////////////////////////////////////////////////////////
-int jhkssh_userauth_password(jhkssh_t * obj, const char *user,
+int jhkssh_userauth_password(jhkssh_t * obj, const char *username,
                              const char *password)
 {
     int rc_ssh;
 
-    if (obj == NULL || user == NULL || password == NULL)
+    if (obj == NULL || username == NULL || password == NULL)
         return -1;
-    jhklog_debug("In %s() user: %s", __func__, user);
+    jhklog_debug("In %s() username: %s", __func__, username);
     if (obj->session == NULL) {
         jhklog_error("In %s() ssh session is not established", __func__);
         return -1;
     }
     // ssh userauth
     while (1) {
-        rc_ssh = libssh2_userauth_password(obj->session, user, password);
+        rc_ssh =
+            libssh2_userauth_password(obj->session, username, password);
         if (rc_ssh == 0) {
             break;
         } else if (rc_ssh == LIBSSH2_ERROR_EAGAIN) {
@@ -305,7 +306,7 @@ int jhkssh_userauth_password(jhkssh_t * obj, const char *user,
 // Author: Komatsu Yuji(Zheng Chuyu)
 //
 /////////////////////////////////////////////////////////////////////////////////
-int jhkssh_userauth_publickey(jhkssh_t * obj, const char *user,
+int jhkssh_userauth_publickey(jhkssh_t * obj, const char *username,
                               const char *privatekey,
                               const char *passphrase)
 {
@@ -319,11 +320,11 @@ int jhkssh_userauth_publickey(jhkssh_t * obj, const char *user,
 
     // check parameters
     jhklog_trace("In %s()", __func__);
-    if (obj == NULL || user == NULL || privatekey == NULL
+    if (obj == NULL || username == NULL || privatekey == NULL
         || passphrase == NULL)
         return -1;
 
-    jhklog_debug("In %s() user: %s", __func__, user);
+    jhklog_debug("In %s() username: %s", __func__, username);
     if (obj->session == NULL) {
         jhklog_error("In %s() ssh session is not established", __func__);
         return -1;
@@ -371,8 +372,9 @@ int jhkssh_userauth_publickey(jhkssh_t * obj, const char *user,
     // ssh userauth publickey
     while (1) {
         rc_ssh =
-            libssh2_userauth_publickey_fromfile(obj->session, user, NULL,
-                                                privatefile, passphrase);
+            libssh2_userauth_publickey_fromfile(obj->session, username,
+                                                NULL, privatefile,
+                                                passphrase);
         if (rc_ssh == 0) {
             break;
         } else if (rc_ssh == LIBSSH2_ERROR_EAGAIN) {

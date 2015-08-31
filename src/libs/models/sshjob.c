@@ -44,7 +44,7 @@ sshjob_t *sshjob_new(void)
     jhklog_trace("In %s()", __func__);
     obj = (sshjob_t *) malloc(sizeof(sshjob_t));
     obj->host = NULL;
-    obj->user = NULL;
+    obj->username = NULL;
     obj->password = NULL;
     obj->privatekey = NULL;
     obj->command = NULL;
@@ -98,7 +98,7 @@ int sshjob_init(sshjob_t * obj)
         return -1;
 
     jhk_free(obj->host);
-    jhk_free(obj->user);
+    jhk_free(obj->username);
     jhk_free(obj->password);
     jhk_free(obj->privatekey);
     jhk_free(obj->command);
@@ -107,12 +107,12 @@ int sshjob_init(sshjob_t * obj)
     obj->jobunit_id = 0;
     obj->proc_jobunit_id = 0;
     obj->hist_jobunit_id = 0;
-    obj->authtype = 0;
     obj->host = NULL;
-    obj->user = NULL;
+    obj->port = 0;
+    obj->authtype = 0;
+    obj->username = NULL;
     obj->password = NULL;
     obj->privatekey = NULL;
-    obj->port = 0;
     obj->command = NULL;
 
     return 0;
@@ -146,11 +146,11 @@ int sshjob_load(sshjob_t * obj, dbi_result res)
     obj->hist_jobunit_id =
         dbi_result_get_ulonglong(res, "hist_jobunit_id");
 
-    obj->authtype = dbi_result_get_int(res, "authtype");
     obj->host = jhkdb_get_string(res, "host");
-    obj->user = jhkdb_get_string(res, "user");
-    obj->password = jhkdb_get_string(res, "password");
     obj->port = dbi_result_get_int(res, "port");
+    obj->authtype = dbi_result_get_int(res, "authtype");
+    obj->username = jhkdb_get_string(res, "username");
+    obj->password = jhkdb_get_string(res, "password");
     obj->privatekey = jhkdb_get_string(res, "privatekey");
     obj->command = jhkdb_get_string(res, "command");
 
@@ -307,7 +307,7 @@ apr_uint64_t proc_sshjob_insert(sshjob_t * obj)
 {
     apr_uint64_t id;
     char *esc_host = NULL;
-    char *esc_user = NULL;
+    char *esc_username = NULL;
     char *esc_password = NULL;
     char *esc_privatekey = NULL;
     char *esc_command = NULL;
@@ -318,19 +318,19 @@ apr_uint64_t proc_sshjob_insert(sshjob_t * obj)
 
     // escape strinq
     esc_host = jhkdb_escape_string(obj->host);
-    esc_user = jhkdb_escape_string(obj->user);
+    esc_username = jhkdb_escape_string(obj->username);
     esc_password = jhkdb_escape_string(obj->password);
     esc_privatekey = jhkdb_escape_string(obj->privatekey);
     esc_command = jhkdb_escape_string(obj->command);
 
     id = jhkdb_insert
-        ("INSERT INTO proc_sshjobs(proc_jobunit_id, authtype, host, user, password, privatekey, port, command) VALUES(%llu, %d, '%s', '%s', '%s', '%s', %d, '%s')",
-         obj->proc_jobunit_id, obj->authtype, esc_host, esc_user,
-         esc_password, esc_privatekey, obj->port, esc_command);
+        ("INSERT INTO proc_sshjobs(proc_jobunit_id, host, port, authtype, username, password, privatekey, command) VALUES(%llu, '%s', %d, %d, '%s', '%s', '%s', '%s')",
+         obj->proc_jobunit_id, esc_host, obj->port, obj->authtype,
+         esc_username, esc_password, esc_privatekey, esc_command);
     obj->id = id;
 
     jhk_free(esc_host);
-    jhk_free(esc_user);
+    jhk_free(esc_username);
     jhk_free(esc_password);
     jhk_free(esc_privatekey);
     jhk_free(esc_command);
@@ -355,7 +355,7 @@ apr_uint64_t hist_sshjob_insert(sshjob_t * obj)
 {
     apr_uint64_t id;
     char *esc_host = NULL;
-    char *esc_user = NULL;
+    char *esc_username = NULL;
     char *esc_password = NULL;
     char *esc_privatekey = NULL;
     char *esc_command = NULL;
@@ -366,19 +366,19 @@ apr_uint64_t hist_sshjob_insert(sshjob_t * obj)
 
     // escape strinq
     esc_host = jhkdb_escape_string(obj->host);
-    esc_user = jhkdb_escape_string(obj->user);
+    esc_username = jhkdb_escape_string(obj->username);
     esc_password = jhkdb_escape_string(obj->password);
     esc_privatekey = jhkdb_escape_string(obj->privatekey);
     esc_command = jhkdb_escape_string(obj->command);
 
     id = jhkdb_insert
-        ("INSERT INTO hist_sshjobs(hist_jobunit_id, authtype, host, user, password, privatekey, port, command) VALUES(%llu, %d, '%s', '%s', '%s', '%s', %d, '%s')",
-         obj->hist_jobunit_id, obj->authtype, esc_host, esc_user,
-         esc_password, esc_privatekey, obj->port, esc_command);
+        ("INSERT INTO hist_sshjobs(hist_jobunit_id, host, port, authtype, username, password, privatekey, command) VALUES(%llu, '%s', %d, %d, '%s', '%s', '%s', '%s')",
+         obj->hist_jobunit_id, esc_host, obj->port, obj->authtype,
+         esc_username, esc_password, esc_privatekey, esc_command);
     obj->id = id;
 
     jhk_free(esc_host);
-    jhk_free(esc_user);
+    jhk_free(esc_username);
     jhk_free(esc_password);
     jhk_free(esc_privatekey);
     jhk_free(esc_command);
@@ -545,8 +545,9 @@ int sshjob_execute(jobunit_t * proc_jobunit)
         != 0)
         goto error;
 
-    jhklog_debug("In %s() host: %s, port: %d,user: %s, command: %s",
-                 __func__, obj->host, obj->port, obj->user, obj->command);
+    jhklog_debug("In %s() host: %s, port: %d, username: %s, command: %s",
+                 __func__, obj->host, obj->port, obj->username,
+                 obj->command);
 
     // replace variable
     var_host = variable_replace(proc_jobunit->parent_id, obj->host);
@@ -559,25 +560,26 @@ int sshjob_execute(jobunit_t * proc_jobunit)
                       obj->port);
         goto error;
     }
-    // ssh user auth
+    // ssh userauth
     rc_ssh = -1;
     switch (obj->authtype) {
     case SSHJOB_AUTHTYPE_PASSWORD:
         rc_ssh =
-            jhkssh_userauth_password(obj_ssh, obj->user, obj->password);
+            jhkssh_userauth_password(obj_ssh, obj->username,
+                                     obj->password);
         break;
     case SSHJOB_AUTHTYPE_PUBLICKEY:
         rc_ssh =
-            jhkssh_userauth_publickey(obj_ssh, obj->user, obj->privatekey,
-                                      obj->password);
+            jhkssh_userauth_publickey(obj_ssh, obj->username,
+                                      obj->privatekey, obj->password);
         break;
     default:
         break;
     }
     if (rc_ssh != 0) {
         execlog_error(proc_jobunit->id,
-                      "Authentication failed. user: '%s', authtype: %d",
-                      obj->user, obj->authtype);
+                      "Authentication failed. username: '%s', authtype: %d",
+                      obj->username, obj->authtype);
         goto error;
     }
     // ssh exec command

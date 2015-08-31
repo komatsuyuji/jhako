@@ -38,7 +38,7 @@ class WinjobsController < ApplicationController
   def index
     jobunit = Jobunit.find(params[:jobunit_id])
     winjob = jobunit.winjob
-    render :json => winjob
+    render :json => winjob.as_json
   end
 
 #################################################################################
@@ -56,8 +56,7 @@ class WinjobsController < ApplicationController
 #################################################################################
   def show
     winjob = Winjob.find(params[:id])
-    winjob.include_root_in_json = true
-    render :json => winjob
+    render :json => winjob.as_json(:root => true)
   end
 
 #################################################################################
@@ -105,6 +104,6 @@ class WinjobsController < ApplicationController
 #
 #################################################################################
     def winjob_params
-      params.require(:winjob).permit(:host, :user, :password, :scheme, :port, :path, :auth, :codepage, :command)
+      params.require(:winjob).permit(:host, :port, :username, :password, :scheme, :path, :auth, :codepage, :command)
     end
 end

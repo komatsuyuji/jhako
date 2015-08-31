@@ -20,6 +20,7 @@ en:
       jobresult: "Job Result"
       setting: "Setting"
       users: "Users"
+      user_profile: "User Profile"
       list: "List"
       tree: "Tree"
       error_condition: "Error Condition"
@@ -65,6 +66,7 @@ en:
       add: "Add"
       delete: "Delete"
       save: "Save"
+      select: "Select"
       cancel: "Cancel"
       clear: "Clear"
       clear_filter: "Clear Filter"
@@ -82,6 +84,7 @@ en:
     model:
       rootjobnet: "Root Jobnet"
       schedule: "Schedule"
+      alarm: "Alarm"
       jobnet: "Jobnet"
       variable: "Variable"
       job: "Job"
@@ -120,6 +123,7 @@ en:
       varjob: "Variable Job"
       sshjob: "SSH Job"
       winjob: "Windows Job"
+      emailjob: "Email Job"
     jobunit_status:
       none: "None"
       standby: "Standby"
@@ -130,6 +134,8 @@ en:
       out_schedule: "Out Schedule"
       carry_over: "Carry Over"
       force_stop: "Force Stop"
+    alarm:
+      path: "Path"
     topjobnet:
       mode: "Mode"
       schedule_time: "Schedule Time"
@@ -137,6 +143,7 @@ en:
       schedule: "Schedule"
       immediate: "Immediate"
       specified: "Specified"
+      alarm: "Alarm"
     rootjobnet:
       disabled: "Disabled"
       active_since: "Active Since"
@@ -154,7 +161,7 @@ en:
     job:
       host: "Host"
       port: "Port"
-      user: "User"
+      username: "User Name"
       password: "Password"
       codepage: "Character Code"
       command: "Command"
@@ -205,6 +212,13 @@ en:
     condition:
       cond: "Condition"
       negative: "Negative"
+    emailjob:
+      host: "Mail Server"
+      auth: "Authentication"
+      mail_from: "Mail From"
+      mail_to: "Mail To"
+      subject: "Subject"
+      body: "Body"
     jobresult:
       exitcode: "Exit Code"
       exitsignal: "Exit Signal"

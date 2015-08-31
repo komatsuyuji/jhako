@@ -144,9 +144,10 @@ int jhkwsman_init(jhkwsman_t * obj)
 // Author: Komatsu Yuji(Zheng Chuyu)
 //
 /////////////////////////////////////////////////////////////////////////////////
-int jhkwsman_set(jhkwsman_t * obj, const char *user, const char *password,
-                 const char *scheme, const char *host, const int port,
-                 const char *path, const char *auth)
+int jhkwsman_set(jhkwsman_t * obj, const char *username,
+                 const char *password, const char *scheme,
+                 const char *host, const int port, const char *path,
+                 const char *auth)
 {
     int transport_timeout = 0;
 
@@ -157,7 +158,8 @@ int jhkwsman_set(jhkwsman_t * obj, const char *user, const char *password,
     jhklog_trace("In %s() host: %s", __func__, host);
 
     jhkwsman_init(obj);
-    obj->client = wsmc_create(host, port, path, scheme, user, password);
+    obj->client =
+        wsmc_create(host, port, path, scheme, username, password);
     if (obj->client == NULL) {
         jhklog_warn
             ("In %s() can not create wsman. scheme: %s, host: %s, port: %d, path: %s",

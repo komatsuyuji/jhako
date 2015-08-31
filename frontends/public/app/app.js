@@ -39,9 +39,10 @@ Ext.application({
   models: [
     'Session',
     'Jobunit', 'ProcJobunit', 'ProcTopjobnet', 'HistJobunit', 'JobunitChild',
-    'Rootjobnet', 'Connector', 'Schedule', 'Variable',
+    'Rootjobnet', 'Connector', 'Schedule', 'Alarm', 'Variable',
     'Sleepjob', 'Clockjob', 'Datejob', 'Datecond', 'Vardatum',
     'Sshjob', 'Winjob', 'Condition',
+    'Emailjob',
     'Jobresult', 'Execlog',
     'Calendar', 'CalendarDate', 'User', 'Configure',
   ],
@@ -55,11 +56,12 @@ Ext.application({
     'Header', 'Main', 'Footer', 'Viewer',
     'session.Win', 'session.Form',
 
-    'common.Jobunit', 'common.Schedule',
+    'common.Jobunit', 'common.Schedule', 'common.Alarm',
     'common.Jobnet', 'common.Subjobnet', 'common.Variable',
     'common.Startjob', 'common.Mergejob', 'common.Sleepjob', 'common.Clockjob',
     'common.Datejob', 'common.Datecond', 'common.Varjob', 'common.Vardatum',
     'common.Sshjob', 'common.Winjob', 'common.Condition',
+    'common.Emailjob',
     'common.Jobresult', 'common.Execlog',
 
     'process.Dashboard', 'process.Summary', 'process.Tree',
@@ -73,6 +75,7 @@ Ext.application({
     'editor.Tab', 'editor.List', 'editor.Detail',
     'editor.Show', 'editor.Draw', 'editor.DrawTab',
     'editor.Flowchart', 'editor.JobunitTab',
+    'editor.WinAlarm',
 
     'calendar.Index', 'calendar.List', 'calendar.Detail', 'calendar.Edit', 'calendar.Date',
 
@@ -83,12 +86,13 @@ Ext.application({
 
   controllers: [
     'Session', 'Main', 'Header',
-    'common.Jobnet', 'common.Schedule', 'common.Variable',
+    'common.Jobnet', 'common.Schedule', 'common.Alarm', 'common.Variable',
     'common.Subjobnet', 'common.Startjob', 'common.Mergejob',
     'common.Sleepjob', 'common.Clockjob',
     'common.Datejob', 'common.Datecond',
     'common.Varjob', 'common.Vardatum',
     'common.Sshjob', 'common.Winjob', 'common.Condition',
+    'common.Emailjob',
     'common.Jobresult', 'common.Execlog',
 
     'process.Summary', 'process.List',
@@ -98,6 +102,7 @@ Ext.application({
     'editor.Tree', 'editor.TreeMenu', 'editor.JobunitFile',
     'editor.List', 'editor.Detail', 'editor.Flowchart',
     'editor.Draw', 'editor.DrawTab', 'editor.JobunitTab',
+    'editor.WinAlarm',
 
     'user.List', 'user.Profile',
     'Calendar', 'Configure'
@@ -115,6 +120,7 @@ Ext.application({
           Ext.create('Jhako.view.process.Viewport');
         } else {
           Ext.create('Jhako.view.user.Profile');
+          Ext.create('Jhako.view.editor.WinAlarm');
           Ext.create('Jhako.view.Viewport');
         }
       }

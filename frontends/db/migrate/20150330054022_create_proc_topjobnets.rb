@@ -38,6 +38,7 @@ class CreateProcTopjobnets < ActiveRecord::Migration
       t.boolean :force_stop, :null => false, :default => false
 
       t.integer :proc_jobunit_id, :null => false, :default => 0, :limit => 8
+      t.integer :proc_alarm_id, :null => false, :default => 0, :limit => 8
       t.integer :mode, :null => false, :default => 0
       t.datetime :schedule_time
       t.integer :run_type, :null => false, :default => 0

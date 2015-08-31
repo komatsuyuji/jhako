@@ -318,7 +318,7 @@ int conditions_put_history(const apr_uint64_t proc_jobunit_id,
 // Author: Komatsu Yuji(Zheng Chuyu)
 //
 /////////////////////////////////////////////////////////////////////////////////
-int proc_condition_delete(const apr_uint64_t proc_jobunit_id)
+int proc_conditions_delete(const apr_uint64_t proc_jobunit_id)
 {
     jhklog_trace("In %s()", __func__);
 
@@ -341,7 +341,7 @@ int proc_condition_delete(const apr_uint64_t proc_jobunit_id)
 // Author: Komatsu Yuji(Zheng Chuyu)
 //
 /////////////////////////////////////////////////////////////////////////////////
-int hist_condition_delete(const apr_uint64_t hist_jobunit_id)
+int hist_conditions_delete(const apr_uint64_t hist_jobunit_id)
 {
     jhklog_trace("In %s()", __func__);
     return

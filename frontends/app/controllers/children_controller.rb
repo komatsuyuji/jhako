@@ -38,7 +38,7 @@ class ChildrenController < ApplicationController
   def index
     jobunit = Jobunit.find(params[:jobunit_id])
     children = jobunit.children
-    render :json => children
+    render :json => children.as_json
   end
 
 #################################################################################
@@ -56,8 +56,7 @@ class ChildrenController < ApplicationController
 #################################################################################
   def show
     jobunit = Jobunit.find(params[:id])
-    jobunit.include_root_in_json = true
-    render :json => jobunit
+    render :json => jobunit.as_json(:root => true)
   end
 
 #################################################################################
@@ -129,10 +128,8 @@ class ChildrenController < ApplicationController
         new_jobunit.rootjobnet.disabled = true
         new_jobunit.rootjobnet.user_id = 0
         new_jobunit.schedules.build(jobunit.schedules.as_json(:except => ['id', 'jobunit_id']))
-        new_jobunit.variables.build(jobunit.variables.as_json(:except => ['id', 'jobunit_id']))
       when 20..99 then
         # jobnet
-        new_jobunit.variables.build(jobunit.variables.as_json(:except => ['id', 'jobunit_id']))
       when 100, 101, 102 then
         # startjob, endjob, mergejob
       when 103 then

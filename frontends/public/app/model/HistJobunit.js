@@ -136,6 +136,10 @@ Ext.define('Jhako.model.HistJobunit', {
     associationKey: 'schedules'
   }, {
     type: 'hasMany',
+    model: 'Jhako.model.Alarm',
+    associationKey: 'alarms'
+  }, {
+    type: 'hasMany',
     model: 'Jhako.model.Connector',
     associationKey: 'connectors'
   }, {
@@ -174,6 +178,10 @@ Ext.define('Jhako.model.HistJobunit', {
     type: 'hasMany',
     model: 'Jhako.model.Condition',
     associationKey: 'conditions'
+  }, {
+    type: 'hasOne',
+    model: 'Jhako.model.Emailjob',
+    associationKey: 'emailjob'
   }, {
     type: 'hasMany',
     model: 'Jhako.model.Jobresult',

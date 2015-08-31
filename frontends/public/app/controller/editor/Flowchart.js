@@ -747,15 +747,13 @@ Ext.define('Jhako.controller.editor.Flowchart', {
 
     var cnt = 0;
     jhako_selected_jobunits.forEach(function(record) {
-      if (record.data.kind < JOBUNIT_KIND_ROOTJOBNET) {
+      if (record.data.kind < JOBUNIT_KIND_JOBNET) {
         cnt++;
         return;
       }
 
       var child = new Jhako.model.JobunitChild(record.data);
       child.set('parent_id', jhako_selected_parent.data.id);
-      if (record.data.kind < JOBUNIT_KIND_JOBNET)
-        child.set('kind', JOBUNIT_KIND_JOBNET);
 
       if (record.data.parent_id == jhako_selected_parent.data.id) {
         child.set('x', record.data.x + 40);

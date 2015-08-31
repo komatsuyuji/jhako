@@ -44,7 +44,7 @@ class ProcTopjobnetsController < ApplicationController
     end
     data = {
       :total_count => count,
-      :proc_topjobnets => proc_topjobnets
+      :proc_topjobnets => proc_topjobnets.as_json
     }
     render :json => data
   end
@@ -93,8 +93,7 @@ class ProcTopjobnetsController < ApplicationController
 #################################################################################
   def show
     proc_topjobnet = ProcTopjobnet.find(params[:id])
-    proc_topjobnet.include_root_in_json = true
-    render :json => proc_topjobnet
+    render :json => proc_topjobnet.as_json(:root => true)
   end
 
 #################################################################################

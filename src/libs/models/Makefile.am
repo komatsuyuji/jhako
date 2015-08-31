@@ -4,6 +4,7 @@ libjhkmodels_a_SOURCES = \
     jobunit.c \
     rootjobnet.c \
     schedule.c \
+    alarm.c \
     connector.c \
     variable.c \
     sleepjob.c \
@@ -14,6 +15,7 @@ libjhkmodels_a_SOURCES = \
     sshjob.c \
     winjob.c \
     condition.c \
+    emailjob.c \
     jobresult.c \
     execlog.c \
     jhkjoblog.c \

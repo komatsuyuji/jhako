@@ -48,8 +48,8 @@ int dateconds_put_process(const apr_uint64_t jobunit_id,
 int dateconds_put_history(const apr_uint64_t proc_jobunit_id,
                           const apr_uint64_t hist_jobunit_id);
 
-int proc_datecond_delete(const apr_uint64_t proc_jobunit_id);
-int hist_datecond_delete(const apr_uint64_t hist_jobunit_id);
+int proc_dateconds_delete(const apr_uint64_t proc_jobunit_id);
+int hist_dateconds_delete(const apr_uint64_t hist_jobunit_id);
 
 int datecond_execute(datecond_t * obj, const time_t base_time,
                      const int beginning_of_week);

@@ -178,7 +178,8 @@ int executive_run(jobunit_t * obj)
         break;
     case JOBUNIT_KIND_SSHJOB:
     case JOBUNIT_KIND_WINJOB:
-        // sshjob, winjob
+    case JOBUNIT_KIND_EMAILJOB:
+        // sshjob, winjob, emailjob
         return executive_background(obj);
         break;
     default:
@@ -219,8 +220,8 @@ int executive_jobnet(jobunit_t * obj)
         return rc;
 
 
-    // inherit variables
-    rc = proc_variable_inherit(obj->id, obj->parent_id);
+    // dup variables
+    rc = proc_variables_dup(obj->parent_id, obj->id);
     if (rc != 0)
         return rc;
 
@@ -327,6 +328,9 @@ int executive_background(jobunit_t * obj)
         break;
     case JOBUNIT_KIND_WINJOB:
         rc_job = winjob_execute(obj);
+        break;
+    case JOBUNIT_KIND_EMAILJOB:
+        rc_job = emailjob_execute(obj);
         break;
     default:
         jhklog_error("In %s() unknown the job kind '%d'", __func__,

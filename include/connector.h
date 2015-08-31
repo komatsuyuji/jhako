@@ -46,8 +46,8 @@ int connector_load(connector_t * obj, dbi_result res);
 
 apr_uint64_t proc_connector_insert(connector_t * obj);
 apr_uint64_t hist_connector_insert(connector_t * obj);
-int proc_connector_delete(const apr_uint64_t proc_jobunit_id);
-int hist_connector_delete(const apr_uint64_t hist_jobunit_id);
+int proc_connectors_delete(const apr_uint64_t proc_jobunit_id);
+int hist_connectors_delete(const apr_uint64_t hist_jobunit_id);
 
 connectors_t *connectors_new(void);
 void connectors_destroy(connectors_t * obj);

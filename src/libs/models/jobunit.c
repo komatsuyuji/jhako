@@ -126,6 +126,7 @@ int jobunit_init(jobunit_t * obj)
     obj->pid = 0;
 
     obj->proc_jobunit_id = 0;
+    obj->proc_alarm_id = 0;
     obj->mode = 0;
     obj->schedule_time = 0;
     obj->run_type = 0;
@@ -185,6 +186,7 @@ int jobunit_load(jobunit_t * obj, dbi_result res)
 
     obj->proc_jobunit_id =
         dbi_result_get_ulonglong(res, "proc_jobunit_id");
+    obj->proc_alarm_id = dbi_result_get_ulonglong(res, "proc_alarm_id");
     obj->mode = dbi_result_get_int(res, "mode");
     obj->schedule_time = jhkdb_get_datetime(res, "schedule_time");
     obj->run_type = dbi_result_get_int(res, "run_type");
@@ -356,7 +358,6 @@ apr_uint64_t proc_topjobnet_insert(jobunit_t * obj)
     ts = jhk_time();
     schedule_time = jhkdb_escape_datetime(obj->schedule_time);
 
-
     // check inserted data
     result =
         jhkdb_select
@@ -370,10 +371,11 @@ apr_uint64_t proc_topjobnet_insert(jobunit_t * obj)
     if (num > 0)
         goto error;
 
-    id = jhkdb_insert("INSERT INTO proc_topjobnets(name, description, kind, hold, skip, timeout, created_at, updated_at, \
+    id = jhkdb_insert
+        ("INSERT INTO proc_topjobnets(name, description, kind, hold, skip, timeout, created_at, updated_at, \
 jobunit_id, proc_jobunit_id, mode, schedule_time, run_type, delay_limit) \
-VALUES ('%s', '%s', %d, %d, %d, %d, '%s', '%s', %llu, %d, %d, %s, %d, %d)",
-                      esc_name, esc_description, obj->kind, obj->hold, obj->skip, obj->timeout, ts, ts, obj->jobunit_id, 0, TOPJOBNET_MODE_SCHEDULE, schedule_time, obj->run_type, obj->delay_limit);
+VALUES ('%s', '%s', %d, %d, %d, %d, '%s', '%s', %llu, %llu, %d, %s, %d, %d)", esc_name,
+         esc_description, obj->kind, obj->hold, obj->skip, obj->timeout, ts, ts, obj->jobunit_id, 0, TOPJOBNET_MODE_SCHEDULE, schedule_time, obj->run_type, obj->delay_limit);
 
     if (id > 0)
         obj->id = id;
@@ -382,6 +384,64 @@ VALUES ('%s', '%s', %d, %d, %d, %d, '%s', '%s', %llu, %d, %d, %s, %d, %d)",
     jhk_free(schedule_time);
     jhk_free(esc_name);
     jhk_free(esc_description);
+    return id;
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+//
+// Function:
+//
+// Purpose:
+//
+// Parameters:
+//
+// Return value:
+//
+// Author: Komatsu Yuji(Zheng Chuyu)
+//
+/////////////////////////////////////////////////////////////////////////////////
+apr_uint64_t proc_topjobnet_insert_alarm(apr_uint64_t jobnet_id,
+                                         apr_uint64_t proc_alarm_id)
+{
+    apr_uint64_t id;
+    jobunit_t *obj;
+    char *esc_name = NULL;
+    char *esc_description = NULL;
+    char *ts;
+
+    jhklog_trace("In %s() jobnet_id: %llu", __func__, jobnet_id);
+
+    id = -1;
+    obj = jobunit_new();
+
+    if (jobunit_select(obj, jobnet_id) < 0) {
+        jhklog_error("In %s() can not find jobnet_id: %llu", __func__,
+                     jobnet_id);
+        goto error;
+    }
+
+    if (!
+        (obj->kind >= JOBUNIT_KIND_ROOTJOBNET
+         && obj->kind < JOBUNIT_KIND_STARTJOB)) {
+        jhklog_error
+            ("In %s() there is not a jobnet. jobnet_id: %llu, kind: %d",
+             __func__, jobnet_id, obj->kind);
+        goto error;
+    }
+
+    esc_name = jhkdb_escape_string(obj->name);
+    esc_description = jhkdb_escape_string(obj->description);
+    ts = jhk_time();
+
+    id = jhkdb_insert
+        ("INSERT INTO proc_topjobnets(name, description, kind, hold, skip, timeout, created_at, updated_at, \
+jobunit_id, proc_jobunit_id, proc_alarm_id, mode) VALUES ('%s', '%s', %d, %d, %d, %d, '%s', '%s', %llu, %llu, %llu, %d)",
+         esc_name, esc_description, obj->kind, obj->hold, obj->skip, obj->timeout, ts, ts, jobnet_id, 0, proc_alarm_id, TOPJOBNET_MODE_ALARM);
+
+  error:
+    jhk_free(esc_name);
+    jhk_free(esc_description);
+    jobunit_destroy(obj);
     return id;
 }
 

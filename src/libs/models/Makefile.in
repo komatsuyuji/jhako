@@ -98,12 +98,13 @@ am__v_AR_1 =
 libjhkmodels_a_AR = $(AR) $(ARFLAGS)
 libjhkmodels_a_LIBADD =
 am_libjhkmodels_a_OBJECTS = jobunit.$(OBJEXT) rootjobnet.$(OBJEXT) \
-	schedule.$(OBJEXT) connector.$(OBJEXT) variable.$(OBJEXT) \
-	sleepjob.$(OBJEXT) clockjob.$(OBJEXT) datejob.$(OBJEXT) \
-	datecond.$(OBJEXT) vardatum.$(OBJEXT) sshjob.$(OBJEXT) \
-	winjob.$(OBJEXT) condition.$(OBJEXT) jobresult.$(OBJEXT) \
-	execlog.$(OBJEXT) jhkjoblog.$(OBJEXT) calendar.$(OBJEXT) \
-	calendar_date.$(OBJEXT) configure.$(OBJEXT)
+	schedule.$(OBJEXT) alarm.$(OBJEXT) connector.$(OBJEXT) \
+	variable.$(OBJEXT) sleepjob.$(OBJEXT) clockjob.$(OBJEXT) \
+	datejob.$(OBJEXT) datecond.$(OBJEXT) vardatum.$(OBJEXT) \
+	sshjob.$(OBJEXT) winjob.$(OBJEXT) condition.$(OBJEXT) \
+	emailjob.$(OBJEXT) jobresult.$(OBJEXT) execlog.$(OBJEXT) \
+	jhkjoblog.$(OBJEXT) calendar.$(OBJEXT) calendar_date.$(OBJEXT) \
+	configure.$(OBJEXT)
 libjhkmodels_a_OBJECTS = $(am_libjhkmodels_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -256,6 +257,7 @@ libjhkmodels_a_SOURCES = \
     jobunit.c \
     rootjobnet.c \
     schedule.c \
+    alarm.c \
     connector.c \
     variable.c \
     sleepjob.c \
@@ -266,6 +268,7 @@ libjhkmodels_a_SOURCES = \
     sshjob.c \
     winjob.c \
     condition.c \
+    emailjob.c \
     jobresult.c \
     execlog.c \
     jhkjoblog.c \
@@ -322,6 +325,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/alarm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/calendar.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/calendar_date.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clockjob.Po@am__quote@
@@ -330,6 +334,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/connector.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/datecond.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/datejob.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/emailjob.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/execlog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jhkjoblog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jobresult.Po@am__quote@

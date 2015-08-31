@@ -373,23 +373,23 @@ int proc_variable_overwrite(const apr_uint64_t proc_jobunit_id, char *name,
 // Author: Komatsu Yuji(Zheng Chuyu)
 //
 /////////////////////////////////////////////////////////////////////////////////
-int proc_variable_inherit(const apr_uint64_t proc_jobunit_id,
-                          const apr_uint64_t parent_id)
+int proc_variables_dup(const apr_uint64_t proc_jobunit_id,
+                       const apr_uint64_t desc_jobunit_id)
 {
     int rc;
     variable_t *obj;
     dbi_result result = NULL;
 
-    jhklog_trace("In %s() proc_jobunit_id: %llu, parent_id: %llu",
-                 __func__, proc_jobunit_id, parent_id);
+    jhklog_trace("In %s() proc_jobunit_id: %llu, desc_jobunit_id: %llu",
+                 __func__, proc_jobunit_id, desc_jobunit_id);
 
-    if (parent_id == 0)
+    if (desc_jobunit_id == 0)
         return 0;
 
     result =
         jhkdb_select
         ("SELECT * FROM proc_variables WHERE proc_jobunit_id = %llu",
-         parent_id);
+         proc_jobunit_id);
     if (result == NULL)
         return -1;
 
@@ -398,7 +398,7 @@ int proc_variable_inherit(const apr_uint64_t proc_jobunit_id,
     while (dbi_result_next_row(result)) {
         variable_load(obj, result);
         if (proc_variable_overwrite
-            (proc_jobunit_id, obj->name, obj->value,
+            (desc_jobunit_id, obj->name, obj->value,
              VARDATUM_OVERWRITE_TRUE) != 0)
             goto error;
     }

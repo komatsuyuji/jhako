@@ -38,7 +38,7 @@ class CalendarDatesController < ApplicationController
   def index
     calendar = Calendar.find(params[:calendar_id])
     calendar_dates = calendar.calendar_dates
-    render :json => calendar_dates
+    render :json => calendar_dates.as_json
   end
 
 #################################################################################
@@ -56,8 +56,7 @@ class CalendarDatesController < ApplicationController
 #################################################################################
   def show
     calendar_date = CalendarDate.find(params[:id])
-    calendar_date.include_root_in_json = true
-    render :json => calendar_date
+    render :json => calendar_date.as_json(:root => true)
   end
 
 #################################################################################

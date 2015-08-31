@@ -26,6 +26,7 @@ Frontends::Application.routes.draw do
     resources :children
     resources :rootjobnets
     resources :schedules
+    resources :alarms
     resources :connectors
     resources :sleepjobs
     resources :clockjobs
@@ -35,6 +36,7 @@ Frontends::Application.routes.draw do
     resources :sshjobs
     resources :winjobs
     resources :conditions
+    resources :emailjobs
   end
 
   resources :proc_topjobnets do

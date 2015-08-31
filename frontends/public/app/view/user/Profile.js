@@ -33,8 +33,8 @@
 /////////////////////////////////////////////////////////////////////////////////
 Ext.define('Jhako.view.user.Profile', {
   alias: 'widget.userProfile',
-  extend: 'Ext.Window',
-  title: 'User Profile',
+  extend: 'Ext.window.Window',
+  title: I18n.t('views.title.user_profile'),
   width: 500,
   autoHeight: true,
   closable: false,
@@ -48,11 +48,11 @@ Ext.define('Jhako.view.user.Profile', {
     xtype: 'userForm',
   }],
   buttons: [{
-    text: 'Save',
+    text: I18n.t('views.button.save'),
     icon: location.pathname + '/images/icons/disk.png',
     action: 'save_user'
   }, '-', {
-    text: 'Cancel',
+    text: I18n.t('views.button.cancel'),
     icon: location.pathname + '/images/icons/cancel.png',
     action: 'cancel_user'
   }],

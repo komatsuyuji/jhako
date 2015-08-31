@@ -104,6 +104,8 @@ Ext.define('Jhako.view.editor.JobunitTab', {
     xtype: 'commonSshjob'
   }, {
     xtype: 'commonWinjob',
+  }, {
+    xtype: 'commonEmailjob',
   }],
 
   initComponent: function() {

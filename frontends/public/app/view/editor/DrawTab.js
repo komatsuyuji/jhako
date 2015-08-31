@@ -93,6 +93,12 @@ Ext.define('Jhako.view.editor.DrawTab', {
       action: 'add_jobunit',
       tooltip: I18n.t('views.jobunit_kind.winjob'),
       jobunitkind: JOBUNIT_KIND_WINJOB
+    }, '', {
+      xtype: 'button',
+      icon: location.pathname + '/images/icons/email.png',
+      action: 'add_jobunit',
+      tooltip: I18n.t('views.jobunit_kind.emailjob'),
+      jobunitkind: JOBUNIT_KIND_EMAILJOB
     }],
   }, {
     xtype: 'toolbar',

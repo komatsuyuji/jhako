@@ -321,8 +321,8 @@ apr_uint64_t hist_jobresult_insert(jobresult_t * obj)
 // Author: Komatsu Yuji(Zheng Chuyu)
 //
 /////////////////////////////////////////////////////////////////////////////////
-int jobresult_put_history(const apr_uint64_t proc_jobunit_id,
-                          const apr_uint64_t hist_jobunit_id)
+int jobresults_put_history(const apr_uint64_t proc_jobunit_id,
+                           const apr_uint64_t hist_jobunit_id)
 {
     int rc;
     jobresult_t *obj;
@@ -367,7 +367,7 @@ int jobresult_put_history(const apr_uint64_t proc_jobunit_id,
 // Author: Komatsu Yuji(Zheng Chuyu)
 //
 /////////////////////////////////////////////////////////////////////////////////
-int proc_jobresult_delete(const apr_uint64_t proc_jobunit_id)
+int proc_jobresults_delete(const apr_uint64_t proc_jobunit_id)
 {
     jhklog_trace("In %s()", __func__);
 
@@ -390,7 +390,7 @@ int proc_jobresult_delete(const apr_uint64_t proc_jobunit_id)
 // Author: Komatsu Yuji(Zheng Chuyu)
 //
 /////////////////////////////////////////////////////////////////////////////////
-int hist_jobresult_delete(const apr_uint64_t hist_jobunit_id)
+int hist_jobresults_delete(const apr_uint64_t hist_jobunit_id)
 {
     jhklog_trace("In %s()", __func__);
 

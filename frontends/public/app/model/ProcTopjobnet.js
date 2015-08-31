@@ -110,6 +110,10 @@ Ext.define('Jhako.model.ProcTopjobnet', {
     type: 'auto',
     defaultValue: 0
   }, {
+    name: 'proc_alarm_id',
+    type: 'auto',
+    defaultValue: 0
+  }, {
     name: 'mode',
     type: 'int',
     defaultValue: 0

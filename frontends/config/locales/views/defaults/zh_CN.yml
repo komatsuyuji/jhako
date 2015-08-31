@@ -12,6 +12,7 @@ zh_CN:
       jobresult: "任务执行结果"
       setting: "配置画面"
       users: "用户列表"
+      users: "用户资料"
       list: "列表"
       tree: "树结构"
       error_condition: "出错停止条件"
@@ -57,6 +58,7 @@ zh_CN:
       add: "追加"
       delete: "删除"
       save: "保存"
+      select: "选择"
       cancel: "取消"
       clear: "清空"
       clear_filter: "取消筛选"
@@ -74,6 +76,7 @@ zh_CN:
     model:
       rootjobnet: "根任务网"
       schedule: "日程表"
+      alarm: "警报"
       jobnet: "任务网"
       variable: "变量"
       job: "job"
@@ -112,6 +115,7 @@ zh_CN:
       varjob: "变量任务"
       sshjob: "SSH任务"
       winjob: "Windows任务"
+      emailjob: "邮件任务"
     jobunit_status:
       none: "未执行"
       standby: "准备执行"
@@ -129,6 +133,7 @@ zh_CN:
       schedule: "日程表执行"
       immediate: "立即执行"
       specified: "指定时刻执行"
+      alarm: "报警执行"
     rootjobnet:
       disabled: "无效"
       active_since: "开始日期"
@@ -140,13 +145,15 @@ zh_CN:
       exclusive: "排他执行"
       fullexclusive: "排他执行（包括出错）"
       parallel: "并列执行"
+    alarm:
+      path: "路径"
     variable:
       name: "变量名"
       value: "值"
     job:
       host: "主机"
       port: "端口号"
-      user: "用户"
+      username: "用户名"
       password: "密码"
       codepage: "字码"
       command: "执行命令"
@@ -197,6 +204,13 @@ zh_CN:
     condition:
       cond: "条件"
       negative: "否定"
+    emailjob:
+      host: "邮件服务器"
+      auth: "认证"
+      mail_from: "送信者"
+      mail_to: "收信者"
+      subject: "主题"
+      body: "邮件内容"
     jobresult:
       exitcode: "返回值"
       exitsignal: "信号"

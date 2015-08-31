@@ -108,6 +108,10 @@ Ext.define('Jhako.view.common.Jobnet', {
     region: 'north',
     height: 150
   }, {
+    xtype: 'commonAlarm',
+    region: 'north',
+    height: 150
+  }, {
     xtype: 'commonJobunit',
     region: 'north',
   }],

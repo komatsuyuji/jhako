@@ -39,7 +39,7 @@ class ConfiguresController < ApplicationController
     configures = Configure.all
     data = {
       :total_count => Configure.all.count,
-      :configures => configures
+      :configures => configures.as_json
     }
     render :json => data
   end
@@ -59,8 +59,7 @@ class ConfiguresController < ApplicationController
 #################################################################################
   def show
     configure = Configure.find(params[:id])
-    configure.include_root_in_json = true
-    render :json => configure.to_json()
+    render :json => configure..as_json(:root => true)
   end
 
 #################################################################################

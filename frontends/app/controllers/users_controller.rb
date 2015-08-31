@@ -44,7 +44,7 @@ class UsersController < ApplicationController
     end
     data = {
       :total_count => count,
-      :users => users
+      :users => users.as_json
     }
     render :json => data
   end
@@ -69,8 +69,7 @@ class UsersController < ApplicationController
       return
     end 
 
-    user.include_root_in_json = true
-    render :json => user
+    render :json => user.as_json(:root => true)
   end
 
 #################################################################################

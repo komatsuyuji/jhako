@@ -132,9 +132,8 @@ Ext.define('Jhako.controller.editor.Draw', {
     }
     var name = JhakoMakeName(store, jobname, '');
 
-
     if (jhako_selected_parent['jhako.model.jobunitsStore']) {
-        jhako_selected_parent['jhako.model.jobunitsStore'].add({
+      jhako_selected_parent['jhako.model.jobunitsStore'].add({
         name: name,
         parent_id: jhako_selected_parent.data.id,
         kind: image.jobunitkind,

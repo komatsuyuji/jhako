@@ -22,11 +22,11 @@ class CreateSshjobs < ActiveRecord::Migration
   def change
     create_table :sshjobs do |t|
       t.integer :jobunit_id, :null => false, :default => 0, :limit => 8
-      t.integer :authtype, :null => false, :default => 0
       t.string :host, :null => false, :default => ''
-      t.string :user, :null => false, :default => ''
-      t.string :password, :null => false, :default => ''
       t.integer :port, :null => false, :default => 22
+      t.integer :authtype, :null => false, :default => 0
+      t.string :username, :null => false, :default => ''
+      t.string :password, :null => false, :default => ''
       t.text :privatekey
       t.text :command
 

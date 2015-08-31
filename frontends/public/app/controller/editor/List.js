@@ -201,8 +201,8 @@ Ext.define('Jhako.controller.editor.List', {
         return;
       }
 
-      // can not paste job
-      if (record.data.kind >= JOBUNIT_KIND_STARTJOB) {
+      // can not paste jobnet or job
+      if (record.data.kind >= JOBUNIT_KIND_JOBNET) {
         cnt++;
         return;
       }
@@ -219,11 +219,6 @@ Ext.define('Jhako.controller.editor.List', {
       // create new child
       var child = new Jhako.model.JobunitChild(record.data);
       child.set('parent_id', jhako_selected_parent.data.id);
-      child.set('x', 0);
-      child.set('y', 0);
-      if (record.data.kind >= JOBUNIT_KIND_ROOTJOBNET) {
-        child.set('kind', JOBUNIT_KIND_ROOTJOBNET);
-      }
       var name = JhakoMakeName(jhako_selected_parent['jhako.model.jobunitsStore'], record.data.name, 'copy');
       child.set('name', name);
 

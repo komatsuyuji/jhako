@@ -38,7 +38,7 @@ class RootjobnetsController < ApplicationController
   def index
     jobunit = Jobunit.find(params[:jobunit_id])
     rootjobnet = jobunit.rootjobnet
-    render :json => rootjobnet
+    render :json => rootjobnet.as_json
   end
 
 #################################################################################
@@ -56,8 +56,7 @@ class RootjobnetsController < ApplicationController
 #################################################################################
   def show
     rootjobnet = Rootjobnet.find(params[:id])
-    rootjobnet.include_root_in_json = true
-    render :json => rootjobnet
+    render :json => rootjobnet.as_json(:root => true)
   end
 
 #################################################################################

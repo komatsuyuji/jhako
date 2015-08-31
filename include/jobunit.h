@@ -52,6 +52,7 @@ typedef struct {
     pid_t pid;
 
     apr_uint64_t proc_jobunit_id;
+    apr_uint64_t proc_alarm_id;
     int mode;
     time_t schedule_time;
     int run_type;
@@ -71,6 +72,8 @@ int proc_jobunit_select(jobunit_t * obj, const apr_uint64_t id);
 int proc_topjobnet_select(jobunit_t * obj, const apr_uint64_t id);
 
 apr_uint64_t proc_topjobnet_insert(jobunit_t * obj);
+apr_uint64_t proc_topjobnet_insert_alarm(apr_uint64_t jobnet_id,
+                                         apr_uint64_t proc_alarm_id);
 apr_uint64_t proc_jobunit_insert(jobunit_t * obj);
 apr_uint64_t hist_jobunit_insert(jobunit_t * obj);
 

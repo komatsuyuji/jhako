@@ -38,7 +38,7 @@ class VardataController < ApplicationController
   def index
     jobunit = Jobunit.find(params[:jobunit_id])
     vardata = jobunit.vardata
-    render :json => vardata
+    render :json => vardata.as_json
   end
 
 #################################################################################
@@ -56,8 +56,7 @@ class VardataController < ApplicationController
 #################################################################################
   def show
     vardatum = Vardatum.find(params[:id])
-    vardatum.include_root_in_json = true
-    render :json => vardatum
+    render :json => vardatum.as_json(:root => true)
   end
 
 #################################################################################

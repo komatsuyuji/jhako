@@ -26,6 +26,7 @@ class HistJobunit < ActiveRecord::Base
   # rootjobnet
   has_one :rootjobnet, :class_name => "HistRootjobnet", :dependent => :destroy
   has_many :schedules, :class_name => "HistSchedule", :dependent => :destroy
+  has_many :alarms, :class_name => "HistAlarm", :dependent => :destroy
 
   # subjobnet
   has_many :connectors, :class_name => "HistConnector", :dependent => :destroy
@@ -54,6 +55,9 @@ class HistJobunit < ActiveRecord::Base
 
   # conditions
   has_many :conditions, :class_name => "HistCondition", :dependent => :destroy
+
+  # emailjob
+  has_one :emailjob, :class_name => "HistEmailjob", :dependent => :destroy
 
   # jobresult
   has_many :jobresults, :class_name => "HistJobresult", :dependent => :destroy

@@ -31,10 +31,10 @@ typedef struct {
     apr_uint64_t proc_jobunit_id;
     apr_uint64_t hist_jobunit_id;
     char *host;
-    char *user;
+    int port;
+    char *username;
     char *password;
     char *scheme;
-    int port;
     char *path;
     char *auth;
     int codepage;

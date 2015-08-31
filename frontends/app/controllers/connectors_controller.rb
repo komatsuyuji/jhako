@@ -38,7 +38,7 @@ class ConnectorsController < ApplicationController
   def index
     jobunit = Jobunit.find(params[:jobunit_id])
     connectors = jobunit.connectors
-    render :json => connectors
+    render :json => connectors.as_json
   end
 
 #################################################################################
@@ -56,8 +56,7 @@ class ConnectorsController < ApplicationController
 #################################################################################
   def show
     connector = Connector.find(params[:id])
-    connector.include_root_in_json = true
-    render :json => connector
+    render :json => connector.as_json(:root => true)
   end
 
 #################################################################################

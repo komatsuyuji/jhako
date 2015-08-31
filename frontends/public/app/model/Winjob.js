@@ -64,7 +64,10 @@ Ext.define('Jhako.model.Winjob', {
     type: 'string',
     defaultValue: ''
   }, {
-    name: 'user',
+    name: 'port',
+    type: 'int'
+  }, {
+    name: 'username',
     type: 'string',
     defaultValue: ''
   }, {
@@ -75,9 +78,6 @@ Ext.define('Jhako.model.Winjob', {
     name: 'scheme',
     type: 'string',
     defaultValue: ''
-  }, {
-    name: 'port',
-    type: 'int'
   }, {
     name: 'path',
     type: 'string',

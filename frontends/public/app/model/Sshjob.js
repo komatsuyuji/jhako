@@ -57,24 +57,24 @@ Ext.define('Jhako.model.Sshjob', {
     name: 'hist_jobunit_id',
     type: 'auto'
   }, {
-    name: 'authtype',
-    type: 'int',
-    defaultValue: 0
-  }, {
     name: 'host',
     type: 'string',
     defaultValue: ''
   }, {
-    name: 'user',
+    name: 'port',
+    type: 'int'
+  }, {
+    name: 'authtype',
+    type: 'int',
+    defaultValue: 0
+  }, {
+    name: 'username',
     type: 'string',
     defaultValue: ''
   }, {
     name: 'password',
     type: 'string',
     defaultValue: ''
-  }, {
-    name: 'port',
-    type: 'int'
   }, {
     name: 'privatekey',
     type: 'string',

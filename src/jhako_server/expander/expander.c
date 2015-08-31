@@ -154,11 +154,22 @@ int expander_topjobnet(jobunit_t * obj)
     if (proc_jobunit_id == 0)
         return -1;
 
+    // set alarm variables
+    if (obj->mode == TOPJOBNET_MODE_ALARM && obj->proc_alarm_id > 0) {
+        jhklog_info
+            ("In %s() proc_topjobnet_id: %llu, proc_jobunit_id: %llu, proc_alarm_id: %llu",
+             __func__, proc_topjobnet_id, proc_jobunit_id,
+             obj->proc_alarm_id);
+        if (alarms_set_variables(obj->proc_alarm_id, proc_jobunit_id) != 0)
+            return -1;
+    }
     // expand rootjobnet
     if (obj->kind == JOBUNIT_KIND_ROOTJOBNET) {
         if (rootjobnet_put_process(jobunit_id, proc_jobunit_id) != 0)
             return -1;
         if (schedules_put_process(jobunit_id, proc_jobunit_id) != 0)
+            return -1;
+        if (alarms_put_process(jobunit_id, proc_jobunit_id) != 0)
             return -1;
     }
     // expand jobnet
@@ -302,6 +313,11 @@ int expander_jobnet(const apr_uint64_t jobnet_id,
                 goto error;
             // conditions
             if (conditions_put_process(jobunit_id, proc_jobunit_id) != 0)
+                goto error;
+            break;
+        case JOBUNIT_KIND_EMAILJOB:
+            // emailjob
+            if (emailjob_put_process(jobunit_id, proc_jobunit_id) != 0)
                 goto error;
             break;
         default:

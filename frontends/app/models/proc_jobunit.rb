@@ -26,6 +26,7 @@ class ProcJobunit < ActiveRecord::Base
   # rootjobnet
   has_one :rootjobnet, :class_name => "ProcRootjobnet", :dependent => :destroy
   has_many :schedules, :class_name => "ProcSchedule", :dependent => :destroy
+  has_many :alarms, :class_name => "ProcAlarm", :dependent => :destroy
 
   # subjobnet
   has_many :connectors, :class_name => "ProcConnector", :dependent => :destroy
@@ -54,6 +55,9 @@ class ProcJobunit < ActiveRecord::Base
 
   # conditions
   has_many :conditions, :class_name => "ProcCondition", :dependent => :destroy
+
+  # emailjob
+  has_one :emailjob, :class_name => "ProcEmailjob", :dependent => :destroy
 
   # jobresults
   has_many :jobresults, :class_name => "ProcJobresult", :dependent => :destroy

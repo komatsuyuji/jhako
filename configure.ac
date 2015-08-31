@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.63])
-AC_INIT([jhako], [0.1.0], [info@jhako.com])
+AC_INIT([jhako], [0.2.0], [info@jhako.com])
 AC_CONFIG_SRCDIR([src/jhako_server/server.c])
 AC_CONFIG_HEADERS([include/config.h])
 AM_INIT_AUTOMAKE

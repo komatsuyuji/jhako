@@ -18,7 +18,6 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-
 Ext.define('Jhako.controller.editor.Tree', {
   extend: 'Ext.app.Controller',
 
@@ -56,15 +55,17 @@ Ext.define('Jhako.controller.editor.Tree', {
     this.control({
       'editorTree': {
         afterrender: this.onAfterrender,
+        beforeitemclick: this.onBeforeitemclick,
         itemclick: this.onItemclick,
         itemcontextmenu: this.onItemcontextmenu
       },
       'editorTree treeview': {
-        beforedrop: this.onBeforedrop,
-        drop: this.onDrop
+        //beforedrop: this.onBeforedrop,
+        //drop: this.onDrop
       },
     });
   },
+
 
   /////////////////////////////////////////////////////////////////////////////////
   //
@@ -92,6 +93,32 @@ Ext.define('Jhako.controller.editor.Tree', {
       parent_id: 0,
     });
     me.onLoadJobunit(0);
+  },
+
+  /////////////////////////////////////////////////////////////////////////////////
+  //
+  // Function:
+  //
+  // Purpose:
+  //
+  // Parameters:
+  //
+  // Return value:
+  //
+  // Author: Komatsu Yuji(Zheng Chuyu)
+  //
+  /////////////////////////////////////////////////////////////////////////////////
+  onBeforeitemclick: function(view, record, item, index, e, eOpts) {
+    var me = this;
+
+    // check editing
+    if (jhako_selected_rootjobnet) {
+      var rootjobnet_id = me.onGetRootjobnet(record.data.id);
+      if (rootjobnet_id != jhako_selected_rootjobnet.data.jobunit_id && jhako_selected_rootjobnet.data.user_id == jhako_login_user.data.id) {
+        Ext.Msg.alert(I18n.t('views.msg.error'), I18n.t('views.msg.unlock_rootjobnet'));
+        return false;
+      }
+    }
   },
 
   /////////////////////////////////////////////////////////////////////////////////
@@ -227,16 +254,6 @@ Ext.define('Jhako.controller.editor.Tree', {
   /////////////////////////////////////////////////////////////////////////////////
   onLoadJobunit: function(id) {
     var me = this;
-
-    // check editing
-    if (jhako_selected_rootjobnet) {
-      var rootjobnet_id = me.onGetRootjobnet(id);
-      if (rootjobnet_id != jhako_selected_rootjobnet.data.jobunit_id && jhako_selected_rootjobnet.data.user_id == jhako_login_user.data.id) {
-        Ext.Msg.alert(I18n.t('views.msg.error'), I18n.t('views.msg.unlock_rootjobnet'));
-        me.onLoadJobunit(jhako_selected_parent.data.id);
-        return;
-      }
-    }
 
     // expand tree
     var tree = me.getEditorTree();

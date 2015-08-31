@@ -30,12 +30,12 @@ typedef struct {
     apr_uint64_t jobunit_id;
     apr_uint64_t proc_jobunit_id;
     apr_uint64_t hist_jobunit_id;
-    int authtype;
     char *host;
-    char *user;
+    int port;
+    int authtype;
+    char *username;
     char *password;
     char *privatekey;
-    int port;
     char *command;
 } sshjob_t;
 

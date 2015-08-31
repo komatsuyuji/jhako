@@ -241,6 +241,12 @@ int housekeeper_topjobnet(jobunit_t * obj)
             return -1;
         if (proc_schedules_delete(proc_jobunit_id) != 0)
             return -1;
+
+        // alarms
+        if (alarms_put_history(proc_jobunit_id, hist_jobunit_id) != 0)
+            return -1;
+        if (proc_alarms_delete(proc_jobunit_id) != 0)
+            return -1;
     }
     // variables
     if (variables_put_history(proc_jobunit_id, hist_jobunit_id) != 0)
@@ -313,9 +319,9 @@ int housekeeper_jobnet(const apr_uint64_t proc_jobnet_id,
             goto error;
 
         // insert jobresult infotmation
-        if (jobresult_put_history(proc_jobunit_id, hist_jobunit_id) != 0)
+        if (jobresults_put_history(proc_jobunit_id, hist_jobunit_id) != 0)
             goto error;
-        if (proc_jobresult_delete(proc_jobunit_id) != 0)
+        if (proc_jobresults_delete(proc_jobunit_id) != 0)
             goto error;
 
         // renew connectors prev_jobid & next_jobid 
@@ -325,7 +331,7 @@ int housekeeper_jobnet(const apr_uint64_t proc_jobnet_id,
             goto error;
 
         // delete execution log
-        if (proc_execlog_delete(proc_jobunit_id) != 0)
+        if (proc_execlogs_delete(proc_jobunit_id) != 0)
             goto error;
 
         // insert other information
@@ -367,7 +373,7 @@ int housekeeper_jobnet(const apr_uint64_t proc_jobnet_id,
                 goto error;
             if (proc_datejob_delete(proc_jobunit_id) != 0)
                 goto error;
-            if (proc_datecond_delete(proc_jobunit_id) != 0)
+            if (proc_dateconds_delete(proc_jobunit_id) != 0)
                 goto error;
             break;
         case JOBUNIT_KIND_VARJOB:
@@ -387,7 +393,7 @@ int housekeeper_jobnet(const apr_uint64_t proc_jobnet_id,
                 goto error;
             if (proc_sshjob_delete(proc_jobunit_id) != 0)
                 goto error;
-            if (proc_condition_delete(proc_jobunit_id) != 0)
+            if (proc_conditions_delete(proc_jobunit_id) != 0)
                 goto error;
             break;
         case JOBUNIT_KIND_WINJOB:
@@ -399,7 +405,15 @@ int housekeeper_jobnet(const apr_uint64_t proc_jobnet_id,
                 goto error;
             if (proc_winjob_delete(proc_jobunit_id) != 0)
                 goto error;
-            if (proc_condition_delete(proc_jobunit_id) != 0)
+            if (proc_conditions_delete(proc_jobunit_id) != 0)
+                goto error;
+            break;
+        case JOBUNIT_KIND_EMAILJOB:
+            // emailjob
+            if (emailjob_put_history(proc_jobunit_id, hist_jobunit_id) !=
+                0)
+                goto error;
+            if (proc_emailjob_delete(proc_jobunit_id) != 0)
                 goto error;
             break;
         default:
@@ -416,7 +430,7 @@ int housekeeper_jobnet(const apr_uint64_t proc_jobnet_id,
         goto error;
 
     // delete process connectors
-    if (proc_connector_delete(proc_jobnet_id) != 0)
+    if (proc_connectors_delete(proc_jobnet_id) != 0)
         goto error;
 
     // delete children jobs
@@ -424,7 +438,7 @@ int housekeeper_jobnet(const apr_uint64_t proc_jobnet_id,
         goto error;
 
     // delete execution log
-    if (proc_execlog_delete(proc_jobnet_id) != 0)
+    if (proc_execlogs_delete(proc_jobnet_id) != 0)
         goto error;
 
     rc = 0;
@@ -482,7 +496,7 @@ int housekeeper_history(void)
 
         if (hist_jobunit_delete(id) != 0)
             goto error;
-        if (hist_jobresult_delete(id) != 0)
+        if (hist_jobresults_delete(id) != 0)
             goto error;
 
         switch (kind) {
@@ -491,15 +505,17 @@ int housekeeper_history(void)
                 goto error;
             if (hist_schedules_delete(id) != 0)
                 goto error;
+            if (hist_alarms_delete(id) != 0)
+                goto error;
             if (hist_variables_delete(id) != 0)
                 goto error;
-            if (hist_connector_delete(id) != 0)
+            if (hist_connectors_delete(id) != 0)
                 goto error;
             break;
         case JOBUNIT_KIND_JOBNET:
             if (hist_variables_delete(id) != 0)
                 goto error;
-            if (hist_connector_delete(id) != 0)
+            if (hist_connectors_delete(id) != 0)
                 goto error;
             break;
         case JOBUNIT_KIND_SLEEPJOB:
@@ -516,7 +532,7 @@ int housekeeper_history(void)
             // datejob
             if (hist_datejob_delete(id) != 0)
                 goto error;
-            if (hist_datecond_delete(id) != 0)
+            if (hist_dateconds_delete(id) != 0)
                 goto error;
             break;
         case JOBUNIT_KIND_VARJOB:
@@ -528,14 +544,19 @@ int housekeeper_history(void)
             // sshjob
             if (hist_sshjob_delete(id) != 0)
                 goto error;
-            if (hist_condition_delete(id) != 0)
+            if (hist_conditions_delete(id) != 0)
                 goto error;
             break;
         case JOBUNIT_KIND_WINJOB:
             // winjob
             if (hist_winjob_delete(id) != 0)
                 goto error;
-            if (hist_condition_delete(id) != 0)
+            if (hist_conditions_delete(id) != 0)
+                goto error;
+            break;
+        case JOBUNIT_KIND_EMAILJOB:
+            // emailjob
+            if (hist_emailjob_delete(id) != 0)
                 goto error;
             break;
         default:

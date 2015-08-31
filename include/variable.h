@@ -50,8 +50,8 @@ int proc_variable_renew(const apr_uint64_t proc_jobunit_id, char *name,
                         char *value);
 int proc_variable_overwrite(const apr_uint64_t proc_jobunit_id, char *name,
                             char *value, const int overwrite);
-int proc_variable_inherit(const apr_uint64_t proc_jobunit_id,
-                          const apr_uint64_t parent_id);
+int proc_variables_dup(const apr_uint64_t proc_jobunit_id,
+                       const apr_uint64_t desc_jobunit_id);
 
 apr_uint64_t hist_variable_insert(variable_t * obj);
 int variables_put_history(const apr_uint64_t proc_jobunit_id,

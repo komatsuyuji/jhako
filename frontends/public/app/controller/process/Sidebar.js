@@ -249,10 +249,10 @@ Ext.define('Jhako.controller.process.Sidebar', {
   onResetButton: function(record) {
     var me = this;
     var panel = me.getProcessSidebar();
-    var btn_hold = panel.query('#btn_hold_proc_jobunit')[0];
-    var btn_skip = panel.query('#btn_skip_proc_jobunit')[0];
-    var btn_start = panel.query('#btn_forcestart_proc_jobunit')[0];
-    var btn_stop = panel.query('#btn_forcestop_proc_jobunit')[0];
+    var btn_hold = panel.down("button[action='hold_jobunit']");
+    var btn_skip = panel.down("button[action='skip_jobunit']");
+    var btn_start = panel.down("button[action='forcestart_jobunit']");
+    var btn_stop = panel.down("button[action='forcestop_jobunit']");
     btn_hold.setDisabled(true);
     btn_skip.setDisabled(true);
     btn_start.setDisabled(true);

@@ -44,7 +44,7 @@ class HistJobunitsController < ApplicationController
     end
     data = {
       :total_count => count,
-      :hist_jobunits => hist_jobunits
+      :hist_jobunits => hist_jobunits.as_json
     }
     render :json => data
   end
@@ -64,42 +64,51 @@ class HistJobunitsController < ApplicationController
 #################################################################################
   def show
     hist_jobunit = HistJobunit.find(params[:id])
-    hist_jobunit.include_root_in_json = true
     case hist_jobunit.kind
     when 0..9 then
       # jobgroup
-      data = hist_jobunit.to_json()
+      data = hist_jobunit.as_json
     when 10..19 then
       # rootjobnet
-      data = hist_jobunit.to_json(:include => [:rootjobnet, :schedules, :children, :connectors, :variables])
+      data = hist_jobunit.as_json(:include => [:rootjobnet, :schedules, :children, :connectors, :variables])
+      data = data.merge({
+        :alarms => hist_jobunit.alarms.as_json
+      })
     when 20..99 then
       # subjobnet
-      data = hist_jobunit.to_json(:include => [:children, :connectors, :variables])
+      data = hist_jobunit.as_json(:include => [:children, :connectors, :variables])
     when 100, 101, 102 then
       # startjob, endjob, mergejob
-      data = hist_jobunit.to_json()
+      data = hist_jobunit.as_json
     when 103 then
       # sleepjob
-      data = hist_jobunit.to_json(:include => [:sleepjob])
+      data = hist_jobunit.as_json(:include => [:sleepjob])
     when 104 then
       # clockjob
-      data = hist_jobunit.to_json(:include => [:clockjob])
+      data = hist_jobunit.as_json(:include => [:clockjob])
     when 105 then
       # datejob
-      data = hist_jobunit.to_json(:include => [:datejob, :dateconds])
+      data = hist_jobunit.as_json(:include => [:datejob, :dateconds])
     when 106 then
       # varjob
-      data = hist_jobunit.to_json(:include => [:vardata])
+      data = hist_jobunit.as_json(:include => [:vardata])
     when 200 then
       # sshjob
-      data = hist_jobunit.to_json(:include => [:sshjob, :conditions, :jobresults])
+      data = hist_jobunit.as_json(:include => [:sshjob, :conditions, :jobresults])
     when 201 then
       # winjob
-      data = hist_jobunit.to_json(:include => [:winjob, :conditions, :jobresults])
+      data = hist_jobunit.as_json(:include => [:winjob, :conditions, :jobresults])
+    when 300 then
+      # emailjob
+      data = proc_jobunit.as_json(:include => [:emailjob])
     else
-      data = hist_jobunit.to_json()
+      data = hist_jobunit.as_json
     end
-    render :json => data
+
+    hist_data = {
+      :hist_jobunit => data
+    }
+    render :json => hist_data.to_json
   end
 
 end

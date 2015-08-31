@@ -69,8 +69,8 @@ Ext.define('Jhako.view.common.Sshjob', {
       ]
     }, {
       xtype: 'textfield',
-      fieldLabel: I18n.t('views.job.user'),
-      name: 'user',
+      fieldLabel: I18n.t('views.job.username'),
+      name: 'username',
       allowBlank: false,
       readOnly: true,
     }, {

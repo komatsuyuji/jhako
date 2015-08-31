@@ -26,6 +26,7 @@ class Jobunit < ActiveRecord::Base
   # rootjobnet
   has_one :rootjobnet, :class_name => "Rootjobnet", :autosave => true, :dependent => :destroy
   has_many :schedules, :class_name => "Schedule", :autosave => true, :dependent => :destroy
+  has_many :alarms, :class_name => "Alarm", :autosave => true, :dependent => :destroy
 
   # subjobnet
   has_many :connectors, :class_name => "Connector", :autosave => true, :dependent => :destroy
@@ -52,6 +53,9 @@ class Jobunit < ActiveRecord::Base
   # conditions
   has_many :conditions, :class_name => "Condition", :autosave => true, :dependent => :destroy
 
+  # emailjob
+  has_one :emailjob, :class_name => "Emailjob", :autosave => true, :dependent => :destroy
+
   validates :name,
     :presence => true,
     :length => {:minimum => 3, :maximum => 255},
@@ -60,4 +64,15 @@ class Jobunit < ActiveRecord::Base
 
   validates :description,
     :length => {:maximum => 255}
+
+  def path
+    if self.parent_id == 0
+      return '/' + self.name
+    end
+    jobunit = Jobunit.find_by(self.parent_id)
+    if jobunit.nil?
+      return '/'
+    end
+    return jobunit.path + '/' + self.name
+  end
 end

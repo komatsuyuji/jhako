@@ -31,6 +31,9 @@ Ext.define('Jhako.controller.Main', {
     ref: 'editorIndex',
     selector: 'editorIndex'
   }, {
+    ref: 'editorDetail',
+    selector: 'editorDetail'
+  }, {
     ref: 'calendarIndex',
     selector: 'calendarIndex'
   }, {
@@ -64,6 +67,7 @@ Ext.define('Jhako.controller.Main', {
     this.control({
       'jhakoMain': {
         afterrender: this.onAfterrender,
+        beforetabchange: this.onBeforetabchange,
       }
     });
   },
@@ -149,8 +153,8 @@ Ext.define('Jhako.controller.Main', {
     });
 
     // set timer
-    var proc_paging = pnl_process.query('#proc_pagingtoolbar')[0];
-    var hist_paging = pnl_history.query('#hist_pagingtoolbar')[0];
+    var proc_paging = pnl_process.down('#proc_pagingtoolbar');
+    var hist_paging = pnl_history.down('#hist_pagingtoolbar');
 
     var store_summary = Jhako.app.getStore('ProcTopjobnetSummary');
     var store_topjobnet = Jhako.app.getStore('ProcTopjobnet');
@@ -239,6 +243,38 @@ Ext.define('Jhako.controller.Main', {
       }
       jhako_interval_count++;
     }, 1000);
+  },
+
+  /////////////////////////////////////////////////////////////////////////////////
+  //
+  // Function:
+  //
+  // Purpose:
+  //
+  // Parameters:
+  //
+  // Return value:
+  //
+  // Author: Komatsu Yuji(Zheng Chuyu)
+  //
+  /////////////////////////////////////////////////////////////////////////////////
+  onBeforetabchange: function(tab, newCard, oldCard, e) {
+    var me = this;
+
+    var detail = me.getEditorDetail();
+    if (!detail)
+      return true;
+
+    var chk_editing = detail.down('#chkbox_editing');
+    if (!chk_editing)
+      return true;
+
+    if (chk_editing.isDisabled() == false && chk_editing.getValue() == true) {
+      Ext.Msg.alert(I18n.t('views.msg.error'), I18n.t('views.msg.unlock_rootjobnet'));
+      return false;
+    }
+
+    return true;
   },
 
 });

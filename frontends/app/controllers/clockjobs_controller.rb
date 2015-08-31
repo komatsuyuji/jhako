@@ -38,7 +38,7 @@ class ClockjobsController < ApplicationController
   def index
     jobunit = Jobunit.find(params[:jobunit_id])
     clockjob = jobunit.clockjob
-    render :json => clockjob
+    render :json => clockjob.as_json
   end
 
 #################################################################################
@@ -56,8 +56,7 @@ class ClockjobsController < ApplicationController
 #################################################################################
   def show
     clockjob = Clockjob.find(params[:id])
-    clockjob.include_root_in_json = true
-    render :json => clockjob
+    render :json => clockjob.as_json(:root => true)
   end
 
 #################################################################################

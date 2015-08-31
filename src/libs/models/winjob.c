@@ -45,7 +45,7 @@ winjob_t *winjob_new(void)
     jhklog_trace("In %s()", __func__);
     obj = (winjob_t *) malloc(sizeof(winjob_t));
     obj->host = NULL;
-    obj->user = NULL;
+    obj->username = NULL;
     obj->password = NULL;
     obj->scheme = NULL;
     obj->path = NULL;
@@ -101,7 +101,7 @@ int winjob_init(winjob_t * obj)
         return -1;
 
     jhk_free(obj->host);
-    jhk_free(obj->user);
+    jhk_free(obj->username);
     jhk_free(obj->password);
     jhk_free(obj->scheme);
     jhk_free(obj->path);
@@ -113,10 +113,10 @@ int winjob_init(winjob_t * obj)
     obj->proc_jobunit_id = 0;
     obj->hist_jobunit_id = 0;
     obj->host = NULL;
-    obj->user = NULL;
+    obj->port = 0;
+    obj->username = NULL;
     obj->password = NULL;
     obj->scheme = NULL;
-    obj->port = 0;
     obj->path = NULL;
     obj->auth = NULL;
     obj->codepage = 0;
@@ -154,10 +154,10 @@ int winjob_load(winjob_t * obj, dbi_result res)
         dbi_result_get_ulonglong(res, "hist_jobunit_id");
 
     obj->host = jhkdb_get_string(res, "host");
-    obj->user = jhkdb_get_string(res, "user");
+    obj->port = dbi_result_get_int(res, "port");
+    obj->username = jhkdb_get_string(res, "username");
     obj->password = jhkdb_get_string(res, "password");
     obj->scheme = jhkdb_get_string(res, "scheme");
-    obj->port = dbi_result_get_int(res, "port");
     obj->path = jhkdb_get_string(res, "path");
     obj->auth = jhkdb_get_string(res, "auth");
     obj->codepage = dbi_result_get_int(res, "codepage");
@@ -319,7 +319,7 @@ apr_uint64_t proc_winjob_insert(winjob_t * obj)
 {
     apr_uint64_t id;
     char *esc_host = NULL;
-    char *esc_user = NULL;
+    char *esc_username = NULL;
     char *esc_password = NULL;
     char *esc_scheme = NULL;
     char *esc_path = NULL;
@@ -332,7 +332,7 @@ apr_uint64_t proc_winjob_insert(winjob_t * obj)
 
     // escape strinq
     esc_host = jhkdb_escape_string(obj->host);
-    esc_user = jhkdb_escape_string(obj->user);
+    esc_username = jhkdb_escape_string(obj->username);
     esc_password = jhkdb_escape_string(obj->password);
     esc_scheme = jhkdb_escape_string(obj->scheme);
     esc_path = jhkdb_escape_string(obj->path);
@@ -340,13 +340,13 @@ apr_uint64_t proc_winjob_insert(winjob_t * obj)
     esc_command = jhkdb_escape_string(obj->command);
 
     id = jhkdb_insert
-        ("INSERT INTO proc_winjobs(proc_jobunit_id, host, user, password, scheme, port, path, auth, codepage, command) \
-VALUES(%llu, '%s', '%s', '%s', '%s', %d, '%s', '%s', %d, '%s')",
-         obj->proc_jobunit_id, esc_host, esc_user, esc_password, esc_scheme, obj->port, esc_path, esc_auth, obj->codepage, esc_command);
+        ("INSERT INTO proc_winjobs(proc_jobunit_id, host, port, username, password, scheme, path, auth, codepage, command) \
+VALUES(%llu, '%s', %d, '%s', '%s', '%s', '%s', '%s', %d, '%s')",
+         obj->proc_jobunit_id, esc_host, obj->port, esc_username, esc_password, esc_scheme, esc_path, esc_auth, obj->codepage, esc_command);
     obj->id = id;
 
     jhk_free(esc_host);
-    jhk_free(esc_user);
+    jhk_free(esc_username);
     jhk_free(esc_password);
     jhk_free(esc_scheme);
     jhk_free(esc_path);
@@ -373,7 +373,7 @@ apr_uint64_t hist_winjob_insert(winjob_t * obj)
 {
     apr_uint64_t id;
     char *esc_host = NULL;
-    char *esc_user = NULL;
+    char *esc_username = NULL;
     char *esc_password = NULL;
     char *esc_scheme = NULL;
     char *esc_path = NULL;
@@ -386,7 +386,7 @@ apr_uint64_t hist_winjob_insert(winjob_t * obj)
 
     // escape strinq
     esc_host = jhkdb_escape_string(obj->host);
-    esc_user = jhkdb_escape_string(obj->user);
+    esc_username = jhkdb_escape_string(obj->username);
     esc_password = jhkdb_escape_string(obj->password);
     esc_scheme = jhkdb_escape_string(obj->scheme);
     esc_path = jhkdb_escape_string(obj->path);
@@ -394,13 +394,13 @@ apr_uint64_t hist_winjob_insert(winjob_t * obj)
     esc_command = jhkdb_escape_string(obj->command);
 
     id = jhkdb_insert
-        ("INSERT INTO hist_winjobs(hist_jobunit_id, host, user, password, scheme, port, path, auth, codepage, command) \
-VALUES(%llu, '%s', '%s', '%s', '%s', %d, '%s', '%s', %d, '%s')",
-         obj->hist_jobunit_id, esc_host, esc_user, esc_password, esc_scheme, obj->port, esc_path, esc_auth, obj->codepage, esc_command);
+        ("INSERT INTO hist_winjobs(hist_jobunit_id, host, port, username, password, scheme, path, auth, codepage, command) \
+VALUES(%llu, '%s', %d, '%s', '%s', '%s', '%s', '%s', %d, '%s')",
+         obj->hist_jobunit_id, esc_host, obj->port, esc_username, esc_password, esc_scheme, esc_path, esc_auth, obj->codepage, esc_command);
     obj->id = id;
 
     jhk_free(esc_host);
-    jhk_free(esc_user);
+    jhk_free(esc_username);
     jhk_free(esc_password);
     jhk_free(esc_scheme);
     jhk_free(esc_path);
@@ -566,9 +566,9 @@ int winjob_execute(jobunit_t * proc_jobunit)
     // load winjob data
     if (proc_winjob_select(obj, proc_jobunit->id) != 0)
         goto error;
-    jhklog_debug("In %s() host: %s, user: %s, command: %s, codepage: %d",
-                 __func__, obj->host, obj->user, obj->command,
-                 obj->codepage);
+    jhklog_debug
+        ("In %s() host: %s, username: %s, command: %s, codepage: %d",
+         __func__, obj->host, obj->username, obj->command, obj->codepage);
 
     // replace variable
     var_host = variable_replace(proc_jobunit->parent_id, obj->host);
@@ -576,7 +576,7 @@ int winjob_execute(jobunit_t * proc_jobunit)
 
     // create wsman
     if (jhkwsman_set
-        (obj_wsman, obj->user, obj->password, obj->scheme, var_host,
+        (obj_wsman, obj->username, obj->password, obj->scheme, var_host,
          obj->port, obj->path, obj->auth) != 0) {
         execlog_error(proc_jobunit->id, "Failed to create '%s://%s:%d/%s'",
                       obj->scheme, var_host, obj->port, obj->path);

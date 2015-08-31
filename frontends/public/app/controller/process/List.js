@@ -97,7 +97,7 @@ Ext.define('Jhako.controller.process.List', {
       return;
 
     if (jhako_login_user.data.kind == USER_KIND_MONITOR) {
-      var btn = grid.query('#btn_selected_proceed')[0];
+      var btn = grid.down('#btn_selected_proceed');
       btn.setVisible(false);
     }
 

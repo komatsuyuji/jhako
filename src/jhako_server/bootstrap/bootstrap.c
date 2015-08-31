@@ -180,9 +180,9 @@ int bootstrap_immediate(void)
 
     jhkdb_begin();
     rc = jhkdb_execute
-        ("UPDATE proc_topjobnets SET status = %d, start_time = NULL, end_time = NULL, updated_at = '%s' WHERE status = %d AND mode = %d",
+        ("UPDATE proc_topjobnets SET status = %d, start_time = NULL, end_time = NULL, updated_at = '%s' WHERE status = %d AND mode in (%d, %d)",
          JOBUNIT_STATUS_READY, jhk_time(), JOBUNIT_STATUS_STANDBY,
-         TOPJOBNET_MODE_IMMEDIATE);
+         TOPJOBNET_MODE_IMMEDIATE, TOPJOBNET_MODE_ALARM);
     jhkdb_commit();
 
     return rc;
@@ -420,6 +420,10 @@ int bootstrap_set_outschedule(jobunit_t * obj)
          JOBUNIT_STATUS_OUTSCHEDULE, ts, ts, ts, obj->id);
 
     if (rc == 0) {
+        // check topjobnet alarm
+        alarms_execute(obj->proc_jobunit_id, JOBUNIT_STATUS_OUTSCHEDULE);
+
+        // joblog
         obj->status = JOBUNIT_STATUS_OUTSCHEDULE;
         jhkjoblog_jobunit(obj);
     }
@@ -456,9 +460,14 @@ int bootstrap_set_carryover(jobunit_t * obj)
          JOBUNIT_STATUS_CARRYOVER, ts, ts, ts, obj->id);
 
     if (rc == 0) {
+        // check topjobnet alarm
+        alarms_execute(obj->proc_jobunit_id, JOBUNIT_STATUS_CARRYOVER);
+
+        // joblog
         obj->status = JOBUNIT_STATUS_CARRYOVER;
         jhkjoblog_jobunit(obj);
     }
+
 
     return rc;
 }
@@ -528,6 +537,8 @@ int bootstrap_ready(void)
             jhkdb_rollback();
             continue;
         }
+        // check topjobnet alarm
+        alarms_execute(topjobnet->proc_jobunit_id, JOBUNIT_STATUS_READY);
         jhkdb_commit();
     }
 

@@ -208,7 +208,7 @@ apr_uint64_t hist_connector_insert(connector_t * obj)
 // Author: Komatsu Yuji(Zheng Chuyu)
 //
 /////////////////////////////////////////////////////////////////////////////////
-int proc_connector_delete(const apr_uint64_t proc_jobunit_id)
+int proc_connectors_delete(const apr_uint64_t proc_jobunit_id)
 {
     jhklog_trace("In %s()", __func__);
     return
@@ -230,7 +230,7 @@ int proc_connector_delete(const apr_uint64_t proc_jobunit_id)
 // Author: Komatsu Yuji(Zheng Chuyu)
 //
 /////////////////////////////////////////////////////////////////////////////////
-int hist_connector_delete(const apr_uint64_t hist_jobunit_id)
+int hist_connectors_delete(const apr_uint64_t hist_jobunit_id)
 {
     jhklog_trace("In %s()", __func__);
     return

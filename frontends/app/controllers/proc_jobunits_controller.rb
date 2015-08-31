@@ -45,7 +45,7 @@ class ProcJobunitsController < ApplicationController
     end
     data = {
       :total_count => count,
-      :proc_jobunits => proc_jobunits
+      :proc_jobunits => proc_jobunits.as_json
     }
     render :json => data
   end
@@ -65,44 +65,52 @@ class ProcJobunitsController < ApplicationController
 #################################################################################
   def show
     proc_jobunit = ProcJobunit.find(params[:id])
-    proc_jobunit.include_root_in_json = true
 
     case proc_jobunit.kind
     when 0..9 then
       # jobgroup
-      data = proc_jobunit.to_json()
+      data = proc_jobunit.as_json
     when 10..19 then
       # rootjobnet
-      data = proc_jobunit.to_json(:include => [:rootjobnet, :schedules, :children, :connectors, :variables, :execlogs])
+      data = proc_jobunit.as_json(:include => [:rootjobnet, :schedules, :children, :connectors, :variables, :execlogs])
+      data = data.merge({
+        :alarms => proc_jobunit.alarms.as_json
+      })
     when 20..99 then
       # subjobnet
-      data = proc_jobunit.to_json(:include => [:children, :connectors, :variables, :execlogs])
+      data = proc_jobunit.as_json(:include => [:children, :connectors, :variables, :execlogs])
     when 100, 101, 102 then
       # startjob, endjob, mergejob
-      data = proc_jobunit.to_json(:include => [:execlogs])
+      data = proc_jobunit.as_json(:include => [:execlogs])
     when 103 then
       # sleepjob
-      data = proc_jobunit.to_json(:include => [:sleepjob, :execlogs])
+      data = proc_jobunit.as_json(:include => [:sleepjob, :execlogs])
     when 104 then
       # clockjob
-      data = proc_jobunit.to_json(:include => [:clockjob, :execlogs])
+      data = proc_jobunit.as_json(:include => [:clockjob, :execlogs])
     when 105 then
       # datejob
-      data = proc_jobunit.to_json(:include => [:datejob, :dateconds, :execlogs])
+      data = proc_jobunit.as_json(:include => [:datejob, :dateconds, :execlogs])
     when 106 then
       # varjob
-      data = proc_jobunit.to_json(:include => [:vardata, :execlogs])
+      data = proc_jobunit.as_json(:include => [:vardata, :execlogs])
     when 200 then
       # sshjob
-      data = proc_jobunit.to_json(:include => [:sshjob, :conditions, :jobresults, :execlogs])
+      data = proc_jobunit.as_json(:include => [:sshjob, :conditions, :jobresults, :execlogs])
     when 201 then
       # winjob
-      data = proc_jobunit.to_json(:include => [:winjob, :conditions, :jobresults, :execlogs])
+      data = proc_jobunit.as_json(:include => [:winjob, :conditions, :jobresults, :execlogs])
+    when 300 then
+      # emailjob
+      data = proc_jobunit.as_json(:include => [:emailjob, :execlogs])
     else
-      data = proc_jobunit.to_json()
+      data = proc_jobunit.as_json
     end
 
-    render :json => data
+    proc_data = {
+      :proc_jobunit => data
+    }
+    render :json => proc_data.to_json
   end
 
 #################################################################################

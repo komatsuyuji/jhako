@@ -147,7 +147,7 @@ int execlog_load(execlog_t * obj, dbi_result res)
 // Author: Komatsu Yuji(Zheng Chuyu)
 //
 /////////////////////////////////////////////////////////////////////////////////
-int proc_execlog_delete(const apr_uint64_t proc_jobunit_id)
+int proc_execlogs_delete(const apr_uint64_t proc_jobunit_id)
 {
     jhklog_trace("In %s()", __func__);
 

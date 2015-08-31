@@ -38,7 +38,7 @@ class DatecondsController < ApplicationController
   def index
     jobunit = Jobunit.find(params[:jobunit_id])
     dateconds = jobunit.dateconds
-    render :json => dateconds
+    render :json => dateconds.as_json
   end
 
 #################################################################################
@@ -56,8 +56,7 @@ class DatecondsController < ApplicationController
 #################################################################################
   def show
     datecond = Datecond.find(params[:id])
-    datecond.include_root_in_json = true
-    render :json => datecond
+    render :json => datecond.as_json(:root => true)
   end
 
 #################################################################################

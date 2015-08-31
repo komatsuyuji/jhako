@@ -119,7 +119,7 @@ Ext.define('Jhako.controller.editor.Detail', {
   onSetCheckbox: function(record) {
     var me = this;
     var detail = me.getEditorDetail();
-    var chk_editing = detail.query('#chkbox_editing')[0];
+    var chk_editing = detail.down('#chkbox_editing');
 
     if (!jhako_selected_rootjobnet || !jhako_login_user)
       return;

@@ -38,7 +38,7 @@ class SleepjobsController < ApplicationController
   def index
     jobunit = Jobunit.find(params[:jobunit_id])
     sleepjob = jobunit.sleepjob
-    render :json => sleepjob
+    render :json => sleepjob.as_json
   end
 
 #################################################################################
@@ -56,8 +56,7 @@ class SleepjobsController < ApplicationController
 #################################################################################
   def show
     sleepjob = Sleepjob.find(params[:id])
-    sleepjob.include_root_in_json = true
-    render :json => sleepjob
+    render :json => sleepjob.as_json(:root => true)
   end
 
 #################################################################################

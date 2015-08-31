@@ -44,7 +44,7 @@ class CalendarsController < ApplicationController
     end
     data = {
       :total_count => count,
-      :calendars => calendars
+      :calendars => calendars.as_json
     }
     render :json => data
   end
@@ -64,8 +64,7 @@ class CalendarsController < ApplicationController
 #################################################################################
   def show
     calendar = Calendar.find(params[:id])
-    calendar.include_root_in_json = true
-    render :json => calendar.to_json(:include => [:calendar_dates])
+    render :json => calendar.as_json(:root => true, :include => [:calendar_dates])
   end
 
 #################################################################################

@@ -100,6 +100,7 @@ var JOBUNIT_KIND_DATEJOB = 105;
 var JOBUNIT_KIND_VARJOB = 106;
 var JOBUNIT_KIND_SSHJOB = 200;
 var JOBUNIT_KIND_WINJOB = 201;
+var JOBUNIT_KIND_EMAILJOB = 300;
 
 var JOBUNIT_STATUS_NONE = 0;
 var JOBUNIT_STATUS_STANDBY = 1;
@@ -122,13 +123,23 @@ var JOBUNIT_STATUS_DATA = [
   [JOBUNIT_STATUS_FORCESTOP, I18n.t('views.jobunit_status.force_stop')]
 ];
 
+var ALARM_STATUS_DATA = [
+  [JOBUNIT_STATUS_READY, I18n.t('views.jobunit_status.ready')],
+  [JOBUNIT_STATUS_RUNNING, I18n.t('views.jobunit_status.running') + '(' + I18n.t('views.jobunit.timeout') + ')'],
+  [JOBUNIT_STATUS_END, I18n.t('views.jobunit_status.end')],
+  [JOBUNIT_STATUS_ERROR, I18n.t('views.jobunit_status.error')],
+  [JOBUNIT_STATUS_OUTSCHEDULE, I18n.t('views.jobunit_status.out_schedule')],
+  [JOBUNIT_STATUS_CARRYOVER, I18n.t('views.jobunit_status.carry_over')],
+];
+
 var TOPJOBNET_MODE_SCHEDULE = 0;
 var TOPJOBNET_MODE_IMMEDIATE = 1;
 var TOPJOBNET_MODE_SPECIFIED = 2;
+var TOPJOBNET_MODE_ALARM = 3;
 var TOPJOBNET_MODE_DATA = [
   [TOPJOBNET_MODE_SCHEDULE, I18n.t('views.topjobnet_mode.schedule')],
   [TOPJOBNET_MODE_IMMEDIATE, I18n.t('views.topjobnet_mode.immediate')],
-  [TOPJOBNET_MODE_SPECIFIED, I18n.t('views.topjobnet_mode.specified')]
+  [TOPJOBNET_MODE_ALARM, I18n.t('views.topjobnet_mode.alarm')]
 ];
 
 var ROOTJOBNET_RUNTYPE_DATA = [
@@ -901,6 +912,12 @@ function JhakoDrawJob(record, view) {
       {
         img.src = location.pathname + '/images/icons/computer.png';
         if (!view) sprites.push(in_point, out_point, branch_point);
+        break;
+      }
+    case JOBUNIT_KIND_EMAILJOB:
+      {
+        img.src = location.pathname + '/images/icons/email.png';
+        if (!view) sprites.push(in_point, out_point);
         break;
       }
     default:

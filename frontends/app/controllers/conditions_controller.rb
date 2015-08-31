@@ -38,7 +38,7 @@ class ConditionsController < ApplicationController
   def index
     jobunit = Jobunit.find(params[:jobunit_id])
     conditions = jobunit.conditions
-    render :json => conditions
+    render :json => conditions.as_json
   end
 
 #################################################################################
@@ -56,8 +56,7 @@ class ConditionsController < ApplicationController
 #################################################################################
   def show
     condition = Condition.find(params[:id])
-    condition.include_root_in_json = true
-    render :json => condition
+    render :json => condition.as_json(:root => true)
   end
 
 #################################################################################

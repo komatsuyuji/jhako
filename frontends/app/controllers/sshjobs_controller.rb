@@ -38,7 +38,7 @@ class SshjobsController < ApplicationController
   def index
     jobunit = Jobunit.find(params[:jobunit_id])
     sshjob = jobunit.sshjob
-    render :json => sshjob
+    render :json => sshjob.as_json
   end
 
 #################################################################################
@@ -56,8 +56,7 @@ class SshjobsController < ApplicationController
 #################################################################################
   def show
     sshjob = Sshjob.find(params[:id])
-    sshjob.include_root_in_json = true
-    render :json => sshjob
+    render :json => sshjob.as_json(:root => true)
   end
 
 #################################################################################
@@ -105,6 +104,6 @@ class SshjobsController < ApplicationController
 #
 #################################################################################
     def sshjob_params
-      params.require(:sshjob).permit(:host, :authtype, :user, :password, :port, :privatekey, :command)
+      params.require(:sshjob).permit(:host, :port, :authtype, :username, :password, :privatekey, :command)
     end
 end

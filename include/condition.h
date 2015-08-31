@@ -49,8 +49,8 @@ int conditions_put_process(const apr_uint64_t jobunit_id,
 int conditions_put_history(const apr_uint64_t proc_jobunit_id,
                            const apr_uint64_t hist_jobunit_id);
 
-int proc_condition_delete(const apr_uint64_t proc_jobunit_id);
-int hist_condition_delete(const apr_uint64_t hist_jobunit_id);
+int proc_conditions_delete(const apr_uint64_t proc_jobunit_id);
+int hist_conditions_delete(const apr_uint64_t hist_jobunit_id);
 
 int condition_execute(condition_t * obj, jobresult_t * obj_res);
 int conditions_execute(const apr_uint64_t proc_jobunit_id,

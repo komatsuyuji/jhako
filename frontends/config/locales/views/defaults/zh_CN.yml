@@ -1,18 +1,26 @@
+#################################################################################
+#
+# $Date:: 2015-06-08 13:37:47 #$
+# $Rev: 741 $
+# $Author: komatsu2055 $
+#
+#################################################################################
+
 zh_CN:
   views:
     title:
-      viewer: "阅览画面"
-      editor: "编辑画面"
-      administration: "管理画面"
-      dashboard: "仪表盘"
-      process: "执行情况"
+      viewer: "执行情况"
+      editor: "作业管理"
+      administration: "管理者功能"
+      dashboard: "统计结果"
+      process: "最新执行情况"
       history: "历史记录"
       summary: "统计数据"
       result: "执行结果"
       jobresult: "任务执行结果"
       setting: "配置画面"
       users: "用户列表"
-      users: "用户资料"
+      user_profile: "用户资料"
       list: "列表"
       tree: "树结构"
       error_condition: "出错停止条件"
@@ -84,7 +92,7 @@ zh_CN:
       vardatum: "变量数据"
       condition: "条件"
       execlog: "执行记录"
-      calendar: "日历"
+      calendar: "作业日历"
       configure: "环境配置"
     column:
       name: "名称"

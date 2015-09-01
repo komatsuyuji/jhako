@@ -100,7 +100,7 @@ class HistJobunitsController < ApplicationController
       data = hist_jobunit.as_json(:include => [:winjob, :conditions, :jobresults])
     when 300 then
       # emailjob
-      data = proc_jobunit.as_json(:include => [:emailjob])
+      data = hist_jobunit.as_json(:include => [:emailjob])
     else
       data = hist_jobunit.as_json
     end

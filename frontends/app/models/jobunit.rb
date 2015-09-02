@@ -69,7 +69,7 @@ class Jobunit < ActiveRecord::Base
     if self.parent_id == 0
       return '/' + self.name
     end
-    jobunit = Jobunit.find_by(self.parent_id)
+    jobunit = Jobunit.find_by(:id => self.parent_id)
     if jobunit.nil?
       return '/'
     end

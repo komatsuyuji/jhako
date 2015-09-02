@@ -338,6 +338,40 @@ int proc_topjobnet_select(jobunit_t * obj, const apr_uint64_t id)
 // Author: Komatsu Yuji(Zheng Chuyu)
 //
 /////////////////////////////////////////////////////////////////////////////////
+int proc_topjobnet_select2(jobunit_t * obj,
+                           const apr_uint64_t proc_jobunit_id)
+{
+    int rc;
+    dbi_result result = NULL;
+
+    jhklog_trace("In %s() proc_jobunit_id: %llu", __func__,
+                 proc_jobunit_id);
+    result =
+        jhkdb_select
+        ("SELECT * FROM proc_topjobnets WHERE proc_jobunit_id = %llu",
+         proc_jobunit_id);
+    if (result == NULL)
+        return -1;
+
+    rc = jobunit_load_one(obj, result);
+
+    dbi_result_free(result);
+    return rc;
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+//
+// Function:
+//
+// Purpose:
+//
+// Parameters:
+//
+// Return value:
+//
+// Author: Komatsu Yuji(Zheng Chuyu)
+//
+/////////////////////////////////////////////////////////////////////////////////
 apr_uint64_t proc_topjobnet_insert(jobunit_t * obj)
 {
     apr_uint64_t id;
@@ -409,7 +443,8 @@ apr_uint64_t proc_topjobnet_insert_alarm(apr_uint64_t jobnet_id,
     char *esc_description = NULL;
     char *ts;
 
-    jhklog_trace("In %s() jobnet_id: %llu", __func__, jobnet_id);
+    jhklog_trace("In %s() jobnet_id: %llu, proc_alarm_id: %llu", __func__,
+                 jobnet_id, proc_alarm_id);
 
     id = -1;
     obj = jobunit_new();

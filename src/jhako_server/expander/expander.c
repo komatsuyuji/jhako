@@ -157,9 +157,8 @@ int expander_topjobnet(jobunit_t * obj)
     // set alarm variables
     if (obj->mode == TOPJOBNET_MODE_ALARM && obj->proc_alarm_id > 0) {
         jhklog_info
-            ("In %s() proc_topjobnet_id: %llu, proc_jobunit_id: %llu, proc_alarm_id: %llu",
-             __func__, proc_topjobnet_id, proc_jobunit_id,
-             obj->proc_alarm_id);
+            ("The alarm is called. proc_topjobnet_id: %llu, proc_jobunit_id: %llu, proc_alarm_id: %llu",
+             proc_topjobnet_id, proc_jobunit_id, obj->proc_alarm_id);
         if (alarms_set_variables(obj->proc_alarm_id, proc_jobunit_id) != 0)
             return -1;
     }

@@ -609,8 +609,8 @@ char *variable_replace(const apr_uint64_t proc_jobunit_id, char *str)
                     strncpy(t, obj->value, len);
                 }
             }
-            jhklog_info("In %s() variable. name: %s, value: %s", __func__,
-                        name, obj->value);
+            jhklog_debug("In %s() variable. name: %s, value: %s", __func__,
+                         name, obj->value);
 
             q = t + len;
             p++;

@@ -411,6 +411,7 @@ int hist_alarms_delete(const apr_uint64_t hist_jobunit_id)
 int alarms_execute(const apr_uint64_t proc_jobunit_id, const int status)
 {
     alarm_t *obj = NULL;
+    jobunit_t *obj_topjobnet = NULL;
     dbi_result result = NULL;
 
     jhklog_trace("In %s() proc_jobunit_id: %llu, status: %d", __func__,
@@ -424,9 +425,20 @@ int alarms_execute(const apr_uint64_t proc_jobunit_id, const int status)
         return -1;
 
     obj = alarm_new();
+    obj_topjobnet = jobunit_new();
+
     while (dbi_result_next_row(result)) {
         alarm_load(obj, result);
         if (obj->status == status) {
+            // can not call alarm again
+            proc_topjobnet_select2(obj_topjobnet, proc_jobunit_id);
+            if (obj_topjobnet->mode == TOPJOBNET_MODE_ALARM) {
+                jhklog_warn
+                    ("In %s() cat not call alarm again. proc_jobunit_id: %llu, mode: %d",
+                     __func__, proc_jobunit_id, obj_topjobnet->mode);
+                goto finish;
+            }
+
             execlog_info(proc_jobunit_id,
                          "Alarm is called. status: %d, jobnet_id: %llu",
                          status, obj->jobnet_id);
@@ -434,7 +446,10 @@ int alarms_execute(const apr_uint64_t proc_jobunit_id, const int status)
         }
     }
 
+  finish:
     alarm_destroy(obj);
+    jobunit_destroy(obj_topjobnet);
+    dbi_result_free(result);
     return 0;
 }
 

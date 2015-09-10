@@ -157,7 +157,7 @@ int emailjob_load(emailjob_t * obj, dbi_result res)
 
     obj->host = jhkdb_get_string(res, "host");
     obj->port = dbi_result_get_int(res, "port");
-    obj->auth = dbi_result_get_int(res, "autht");
+    obj->auth = dbi_result_get_int(res, "auth");
     obj->username = jhkdb_get_string(res, "username");
     obj->password = jhkdb_get_string(res, "password");
     obj->mail_from = jhkdb_get_string(res, "mail_from");

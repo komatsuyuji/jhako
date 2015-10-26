@@ -59,7 +59,7 @@ class ConfiguresController < ApplicationController
 #################################################################################
   def show
     configure = Configure.find(params[:id])
-    render :json => configure..as_json(:root => true)
+    render :json => configure.as_json(:root => true)
   end
 
 #################################################################################

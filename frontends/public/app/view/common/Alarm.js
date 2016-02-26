@@ -44,7 +44,6 @@ Ext.define('Jhako.view.common.Alarm', {
       editor: {
         xtype: 'combobox',
         editable: false,
-        readOnly: true,
         store: ALARM_STATUS_DATA,
         allowBlank: false,
       },
@@ -71,7 +70,6 @@ Ext.define('Jhako.view.common.Alarm', {
       editor: {
         xtype: 'textfield',
         editable: false,
-        readOnly: true,
       },
     }]
   },
